@@ -16,4 +16,15 @@ public class Position {
     public int getCol() {
         return this.col;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Position){
+            Position other = (Position) obj;
+            if (this.row == other.row && this.col == other.col){
+                return true;
+            }
+        }
+        return false;
+    }
 }
