@@ -27,4 +27,18 @@ public class Position {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        int prime = 31;
+        int result = 1;
+        result = prime * result + this.col;
+        result = prime * result + this.row;
+        return result ;
+    }
+
+    @Override
+    public String toString() {
+        return "Position: (" + this.row + ", " + this.col + ")" ;
+    }
 }
