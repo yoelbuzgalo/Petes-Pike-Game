@@ -1,0 +1,5 @@
+orange goat down
+orange goat left 
+blue goat down
+green goat left
+pete up
