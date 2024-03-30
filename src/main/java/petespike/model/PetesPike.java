@@ -80,7 +80,10 @@ public class PetesPike {
         return state;
     }
 
-    public char getSymbolAt(Position position){
+    public char getSymbolAt(Position position)throws PetesPikeException{
+        if(position.getCol() >= this.cols || position.getRow() >= this.rows){
+            throw new PetesPikeException("Position out of range");
+        }
         return board[position.getRow()][position.getCol()];
     }
 
@@ -108,7 +111,10 @@ public class PetesPike {
         return moves;
     }
 
-    public void makeMove(Move move){
+    public void makeMove(Move move) throws PetesPikeException{
+        if(move.getPosition().getRow() >= this.rows || move.getPosition().getCol() >= this.cols || board[move.getPosition().getRow()][move.getPosition().getCol()] == EMPTY_SYMBOL){
+            throw new PetesPikeException("Invalid move");
+        }
         moveCount ++;
         if(this.state == GameState.NEW){
             this.state = GameState.IN_PROGRESS; 
@@ -146,13 +152,13 @@ public class PetesPike {
         }
 
         if(moving == PETE_SYMBOL){
-            System.out.println("Pete fell off!!");
             state = GameState.NO_MOVES;
-            return;
+            throw new PetesPikeException("Pete fell off!!");
+            
         }
         else{
-            System.out.println(moving + " fell off!!");
-            return;
+            throw new PetesPikeException("Goat fell off!");
+            
         }
 
 
