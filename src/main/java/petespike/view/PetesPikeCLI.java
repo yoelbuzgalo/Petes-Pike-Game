@@ -1,11 +1,10 @@
 package petespike.view;
 
-import petespike.model.GameState;
+
 import petespike.model.PetesPike;
 import petespike.model.PetesPikeException;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
@@ -33,7 +32,7 @@ public class PetesPikeCLI {
         int rows = engine.getRows();
 
         System.out.print(" ");
-        IntStream.range(0, (rows)).forEach((rowNum) -> System.out.print(" " + rowNum));
+        IntStream.range(0, (cols)).forEach((colNum) -> System.out.print(" " + colNum));
         System.out.println();
         for(int i = 0; i < rows; i++){
             System.out.print(i);
