@@ -5,6 +5,8 @@ import petespike.model.PetesPike;
 import petespike.model.PetesPikeException;
 
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
@@ -19,6 +21,21 @@ public class PetesPikeCLI {
             "quit - quits the game"
     };
 
+    private final static Map<Character, String> characterColors = new HashMap<>();
+
+    static {
+        characterColors.put('P', AsciiColorCodes.RED);
+        characterColors.put('0', AsciiColorCodes.BLUE);
+        characterColors.put('1', AsciiColorCodes.ORANGE);
+        characterColors.put('2', AsciiColorCodes.GREEN);
+        characterColors.put('3', AsciiColorCodes.YELLOW);
+        characterColors.put('4', AsciiColorCodes.MAGENTA);
+        characterColors.put('5', AsciiColorCodes.GOLD);
+        characterColors.put('6', AsciiColorCodes.PURPLE);
+        characterColors.put('7', AsciiColorCodes.LT_GRAY);
+        characterColors.put('8', AsciiColorCodes.CYAN);
+    }
+
     private static void printCommands(){
         System.out.println("Commands: ");
         for(String command : COMMANDS){
@@ -26,8 +43,15 @@ public class PetesPikeCLI {
         }
     }
 
-    private static boolean isCharacter(char[][] board, int row, int col){
-        return board[row][col] != '-';
+    private static String colorizeCharacter(char[][] board, int row, int col){
+        if (board[row][col] == 'T') {
+            return "+";
+        } else if (board[row][col] == 'P'){
+            return characterColors.get(board[row][col]) + 'P' + AsciiColorCodes.RESET;
+        } else if (Character.isDigit(board[row][col])) {
+            return characterColors.get(board[row][col]) + 'G' + AsciiColorCodes.RESET;
+        }
+        return "-";
     }
 
 
@@ -42,12 +66,7 @@ public class PetesPikeCLI {
         for(int i = 0; i < rows; i++){
             System.out.print(i);
             for (int j = 0; j < cols; j++){
-                if (isCharacter(board, i, j)){
-                    AsciiColorCodes color = engine.getCharacterColor(board[i][j]); // Use a map to store each character's ascii color in the engine
-                    System.out.print(" " + color + board[i][j] + AsciiColorCodes.RESET);
-                } else {
-                    System.out.print(" " + board[i][j]);
-                }
+                System.out.print(" " + colorizeCharacter(board, i, j));
             }
             System.out.println();
         }
