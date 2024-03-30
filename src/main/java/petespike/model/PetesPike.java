@@ -4,16 +4,20 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import petespike.view.AsciiColorCodes;
 
 public class PetesPike {
     char MOUNTAINTOP_SYMBOL = 'T';
     char EMPTY_SYMBOL = '-';
     char PETE_SYMBOL = 'P';
-    Set<Character> GOAT_SYBOLS = new HashSet<>(Arrays.asList('0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8'));
+    Set<Character> GOAT_SYMBOLS = new HashSet<>(Arrays.asList('0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8'));
 
     private final int rows;
     private final int cols;
@@ -47,7 +51,7 @@ public class PetesPike {
                 else if(l.charAt(col)== PETE_SYMBOL){
                     petePos = new Position(row, col);
                 }
-                else if(GOAT_SYBOLS.contains(l.charAt(col))){
+                else if(GOAT_SYMBOLS.contains(l.charAt(col))){
                     goatPos.add(new Position(row, col));
                 }
             }
@@ -125,7 +129,7 @@ public class PetesPike {
 
                 if(moving == PETE_SYMBOL){
                     petePos = new Position(newrow, newcol);
-                    if(petePos == mountaintopPos){
+                    if(petePos.equals(mountaintopPos)){
                         this.state = GameState.WON;
                     }
                     return;
@@ -161,6 +165,8 @@ public class PetesPike {
             game.makeMove(new Move(game.petePos, Direction.DOWN));
             System.out.println(game.getState());
             System.out.println(game.petePos);
+            System.out.println(game.mountaintopPos);
+            System.out.println();
         }
         catch(PetesPikeException e){
             System.out.println(e.getMessage());
