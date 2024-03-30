@@ -26,6 +26,11 @@ public class PetesPikeCLI {
         }
     }
 
+    private static boolean isCharacter(char[][] board, int row, int col){
+        return board[row][col] != '-';
+    }
+
+
     private static void printBoard(PetesPike engine){
         char[][] board = engine.getBoard();
         int cols = engine.getCols();
@@ -37,7 +42,12 @@ public class PetesPikeCLI {
         for(int i = 0; i < rows; i++){
             System.out.print(i);
             for (int j = 0; j < cols; j++){
-                System.out.print(" " + board[i][j]);
+                if (isCharacter(board, i, j)){
+                    AsciiColorCodes color = engine.getCharacterColor(board[i][j]); // Use a map to store each character's ascii color in the engine
+                    System.out.print(" " + color + board[i][j] + AsciiColorCodes.RESET);
+                } else {
+                    System.out.print(" " + board[i][j]);
+                }
             }
             System.out.println();
         }
