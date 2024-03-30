@@ -21,12 +21,11 @@ public class PetesPike {
     private Position mountaintopPos;
     private Position petePos;
 
-    private 
+    private GameState state;
 
-    public PetesPike(String filename) throws IOException{
-        moveCount = 0;
-        FileReader file = new FileReader(filename);
-        BufferedReader reader = new BufferedReader(file);
+    public PetesPike(String filename) throws PetesPikeException{
+        moveCount = 0; 
+        try(BufferedReader reader = new BufferedReader(new FileReader(filename))){
 
         String[] line = reader.readLine().split(" ");
         board = new String[Integer.parseInt(line[0])][Integer.parseInt(line[1])];
@@ -45,10 +44,12 @@ public class PetesPike {
                 }
             }
         }
+    }
+    catch(IOException e){
+        throw new PetesPikeException(e.getMessage());
+    }
 
-
-
-        reader.close();
+        this.state = GameState.NEW;
     }
 
     public int getMoveCount() {
@@ -61,5 +62,9 @@ public class PetesPike {
 
     public int getCols() {
         return cols;
+    }
+
+    public GameState getState() {
+        return state;
     }
 }
