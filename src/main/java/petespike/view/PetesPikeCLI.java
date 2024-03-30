@@ -14,6 +14,10 @@ import java.util.stream.IntStream;
  * This class is the command line interface to run Pete's Pike game
  * @author Yoel Buzgalo
  */
+/**
+ * This class is the command line interface to run Pete's Pike game
+ * @author Yoel Buzgalo
+ */
 public class PetesPikeCLI {
     private final static String[] COMMANDS = {
             "help - displays list of commands",
@@ -29,6 +33,7 @@ public class PetesPikeCLI {
 
     static {
         // Associate each unique symbol to its color piece
+        // Associate each unique symbol to its color piece
         characterColors.put('P', AsciiColorCodes.RED);
         characterColors.put('0', AsciiColorCodes.BLUE);
         characterColors.put('1', AsciiColorCodes.ORANGE);
@@ -41,6 +46,9 @@ public class PetesPikeCLI {
         characterColors.put('8', AsciiColorCodes.CYAN);
     }
 
+    /**
+     * Prints a list of all commands
+     */
     /**
      * Prints a list of all commands
      */
@@ -73,6 +81,10 @@ public class PetesPikeCLI {
      * This function prints the board
      * @param engine
      */
+    /**
+     * This function prints the board
+     * @param engine
+     */
     private static void printBoard(PetesPike engine){
         char[][] board = engine.getBoard();
         int cols = engine.getCols();
@@ -90,6 +102,10 @@ public class PetesPikeCLI {
         }
     }
 
+    /**
+     * Main entry to start the game using CLI
+     * @param args
+     */
     /**
      * Main entry to start the game using CLI
      * @param args
