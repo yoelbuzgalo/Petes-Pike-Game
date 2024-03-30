@@ -105,6 +105,24 @@ public class PetesPike {
     }
 
     public void makeMove(Move move){
-        
+        moveCount ++;
+        int newrow = move.getPosition().getRow();
+        int newcol = move.getPosition().getCol();
+        char moving = board[move.getPosition().getRow()][move.getPosition().getCol()];
+        board[move.getPosition().getRow()][move.getPosition().getCol()] = EMPTY_SYMBOL;
+
+        while((newrow >= 0 && newrow < this.rows) && (newcol >= 0 && newcol < this.cols)){
+            if(board[newrow][newcol] != EMPTY_SYMBOL){
+                newrow -= move.getDirection().getRow();
+                newcol -= move.getDirection().getCol();
+                board[newrow][newcol] = moving;
+                if(moving == PETE_SYMBOL){
+                    petePos = new Position(newrow, newcol);
+                }
+            }
+            newrow += move.getDirection().getRow();
+            newcol += move.getDirection().getCol();
+
+        }
     }
 }
