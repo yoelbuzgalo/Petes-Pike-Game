@@ -31,6 +31,7 @@ public class PetesPike {
 
     private GameState state;
 
+    
     public PetesPike(String filename) throws PetesPikeException{
         moveCount = 0; 
         goatPos = new HashSet<>();
@@ -41,8 +42,10 @@ public class PetesPike {
         rows = Integer.parseInt(line[0]);
         cols = Integer.parseInt(line[1]);
 
+        //reads file into board
         for(int row = 0 ; row < rows; row++){
             String l = reader.readLine();
+
             for(int col = 0 ; col < cols ; col++){
                 board[row][col] = l.charAt(col);
                 if(l.charAt(col)== MOUNTAINTOP_SYMBOL){
@@ -80,6 +83,7 @@ public class PetesPike {
         return state;
     }
 
+    //checks if valid position and returns char
     public char getSymbolAt(Position position)throws PetesPikeException{
         if(position.getCol() >= this.cols || position.getRow() >= this.rows){
             throw new PetesPikeException("Position out of range");
@@ -95,6 +99,7 @@ public class PetesPike {
         return board;
     }
 
+    //loops through all moves for all goats and Pete
     public List<Move> getPossibleMoves(){
         List<Move> moves = new LinkedList<>();
         
@@ -112,29 +117,38 @@ public class PetesPike {
     }
 
     public void makeMove(Move move) throws PetesPikeException{
+        //checks if mov is possible
         if(move.getPosition().getRow() >= this.rows || move.getPosition().getCol() >= this.cols || board[move.getPosition().getRow()][move.getPosition().getCol()] == EMPTY_SYMBOL){
             throw new PetesPikeException("Invalid move");
         }
+
+        //updates counters
         moveCount ++;
         if(this.state == GameState.NEW){
             this.state = GameState.IN_PROGRESS; 
         }
+
+        //new col and row for moved char
         int newrow = move.getPosition().getRow();
         int newcol = move.getPosition().getCol();
 
+        //holds moving char and changes that position to an empty symbol
         char moving = board[move.getPosition().getRow()][move.getPosition().getCol()];
-
         board[move.getPosition().getRow()][move.getPosition().getCol()] = EMPTY_SYMBOL;
 
+        //loops until out of range of board
         while((newrow >= 0 && newrow < this.rows) && (newcol >= 0 && newcol < this.cols)){
+            //checks if there is a piece to stop moving char
             if(board[newrow][newcol] != EMPTY_SYMBOL && board[newrow][newcol] != MOUNTAINTOP_SYMBOL){
 
                 newrow -= move.getDirection().getRow();
                 newcol -= move.getDirection().getCol();
+                //sets new position to char
                 board[newrow][newcol] = moving;
 
                 if(moving == PETE_SYMBOL){
                     petePos = new Position(newrow, newcol);
+                    //checks if game won
                     if(petePos.equals(mountaintopPos)){
                         this.state = GameState.WON;
                     }
@@ -151,6 +165,7 @@ public class PetesPike {
 
         }
 
+        //throws error based off which piece fell off
         if(moving == PETE_SYMBOL){
             state = GameState.NO_MOVES;
             throw new PetesPikeException("Pete fell off!!");
