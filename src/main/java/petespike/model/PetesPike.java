@@ -3,7 +3,9 @@ package petespike.model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +13,7 @@ public class PetesPike {
     char MOUNTAINTOP_SYMBOL = 'T';
     char EMPTY_SYMBOL = '-';
     char PETE_SYMBOL = 'P';
-    //Set<Character> GOAT_SYBOLS = new HashSet<>().addAll(){'0' , '1' , '2' , '3' , '4' , '5' , '6'};
+    Set<Character> GOAT_SYBOLS = new HashSet<>(Arrays.asList('0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8'));
 
     private final int rows;
     private final int cols;
@@ -27,6 +29,7 @@ public class PetesPike {
 
     public PetesPike(String filename) throws PetesPikeException{
         moveCount = 0; 
+        goatPos = new HashSet<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(filename))){
 
         String[] line = reader.readLine().split(" ");
@@ -44,7 +47,9 @@ public class PetesPike {
                 else if(l.charAt(col)== PETE_SYMBOL){
                     petePos = new Position(row, col);
                 }
-                //else if()
+                else if(GOAT_SYBOLS.contains(l.charAt(col))){
+                    goatPos.add(new Position(row, col));
+                }
             }
         }
     }
@@ -83,7 +88,19 @@ public class PetesPike {
         return board;
     }
 
-    // public List<Move> getPossibleMoves(){
+    public List<Move> getPossibleMoves(){
+        List<Move> moves = new LinkedList<>();
+        
+        for(Direction direction : Direction.values()){
+            moves.add(new Move(petePos, direction));
+        }  
 
-    // }
+        for(Position position : goatPos){
+            for(Direction direction : Direction.values()){
+                moves.add(new Move(position, direction));
+            }  
+        }
+
+        return moves;
+    }
 }
