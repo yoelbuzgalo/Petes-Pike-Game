@@ -1,8 +1,8 @@
 package petespike.model;
 
 public class Position {
-    private int row;
-    private int col;
+    private final int row;
+    private final int col;
 
     public Position(int row, int col){
         this.row = row;
@@ -21,9 +21,6 @@ public class Position {
     public boolean equals(Object obj) {
         if(obj instanceof Position){
             Position other = (Position) obj;
-            // if (this.row == other.row && this.col == other.col){
-            //     return true;
-            // }
             return this.hashCode() == other.hashCode();
         }
         return false;

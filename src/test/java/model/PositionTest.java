@@ -30,8 +30,8 @@ public class PositionTest {
     }
 
     @Test
-    public void testEqualsFalse2(){
-        Position p1 = new Position(1, 1);
+    public void testEqualsFalseFlippedRowCol1(){
+        Position p1 = new Position(0, 1);
         Position p2 = new Position(1, 0);
 
         Boolean expected = false;
@@ -41,7 +41,7 @@ public class PositionTest {
     }
 
     @Test
-    public void testEqualsFalse3(){
+    public void testEqualsFalseFlippedRowCol2(){
         Position p1 = new Position(1, 0);
         Position p2 = new Position(0, 1);
 
