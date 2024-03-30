@@ -7,14 +7,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PetesPike {
-    String MOUNTAINTOP_SYMBOL = "T";
+    char MOUNTAINTOP_SYMBOL = 'T';
     char EMPTY_SYMBOL = '-';
-    String PETE_SYMBOL = "P";
+    char PETE_SYMBOL = 'P';
     Set<String> GOAT_SYBOLS = new HashSet<>();
 
     private final int rows;
     private final int cols;
-    private String[][] board;
+    private char[][] board;
 
     private int moveCount;
 
@@ -28,18 +28,18 @@ public class PetesPike {
         try(BufferedReader reader = new BufferedReader(new FileReader(filename))){
 
         String[] line = reader.readLine().split(" ");
-        board = new String[Integer.parseInt(line[0])][Integer.parseInt(line[1])];
+        board = new char[Integer.parseInt(line[0])][Integer.parseInt(line[1])];
         rows = Integer.parseInt(line[0]);
         cols = Integer.parseInt(line[1]);
 
         for(int row = 0 ; row < rows; row++){
-            line = reader.readLine().split("");
+            String l = reader.readLine();
             for(int col = 0 ; col < cols ; col++){
-                board[row][col] = line[col];
-                if(line[col].equals(MOUNTAINTOP_SYMBOL)){
+                board[row][col] = l.charAt(col);
+                if(l.charAt(col)== MOUNTAINTOP_SYMBOL){
                     mountaintopPos = new Position(row, col);
                 }
-                else if(line[col].equals(PETE_SYMBOL)){
+                else if(l.charAt(col)== PETE_SYMBOL){
                     petePos = new Position(row, col);
                 }
             }
@@ -66,5 +66,9 @@ public class PetesPike {
 
     public GameState getState() {
         return state;
+    }
+
+    public char getSymbolAt(Position position){
+        return board[position.getRow()][position.getCol()];
     }
 }
