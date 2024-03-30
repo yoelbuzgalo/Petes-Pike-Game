@@ -4,13 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PetesPike {
     char MOUNTAINTOP_SYMBOL = 'T';
     char EMPTY_SYMBOL = '-';
     char PETE_SYMBOL = 'P';
-    Set<String> GOAT_SYBOLS = new HashSet<>();
+    //Set<Character> GOAT_SYBOLS = new HashSet<>().addAll(){'0' , '1' , '2' , '3' , '4' , '5' , '6'};
 
     private final int rows;
     private final int cols;
@@ -20,6 +21,7 @@ public class PetesPike {
 
     private Position mountaintopPos;
     private Position petePos;
+    private Set<Position> goatPos;
 
     private GameState state;
 
@@ -42,6 +44,7 @@ public class PetesPike {
                 else if(l.charAt(col)== PETE_SYMBOL){
                     petePos = new Position(row, col);
                 }
+                //else if()
             }
         }
     }
@@ -71,4 +74,16 @@ public class PetesPike {
     public char getSymbolAt(Position position){
         return board[position.getRow()][position.getCol()];
     }
+
+    public Position getMountaintop(){
+        return this.mountaintopPos;
+    }
+
+    public char[][] getBoard() {
+        return board;
+    }
+
+    // public List<Move> getPossibleMoves(){
+
+    // }
 }
