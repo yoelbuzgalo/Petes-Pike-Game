@@ -106,23 +106,64 @@ public class PetesPike {
 
     public void makeMove(Move move){
         moveCount ++;
+        if(this.state == GameState.NEW){
+            this.state = GameState.IN_PROGRESS; 
+        }
         int newrow = move.getPosition().getRow();
         int newcol = move.getPosition().getCol();
+
         char moving = board[move.getPosition().getRow()][move.getPosition().getCol()];
+
         board[move.getPosition().getRow()][move.getPosition().getCol()] = EMPTY_SYMBOL;
 
         while((newrow >= 0 && newrow < this.rows) && (newcol >= 0 && newcol < this.cols)){
             if(board[newrow][newcol] != EMPTY_SYMBOL){
+
                 newrow -= move.getDirection().getRow();
                 newcol -= move.getDirection().getCol();
                 board[newrow][newcol] = moving;
+
                 if(moving == PETE_SYMBOL){
                     petePos = new Position(newrow, newcol);
+                    if(petePos == mountaintopPos){
+                        this.state = GameState.WON;
+                    }
+                    return;
+                }
+                else{
+                    goatPos.add(new Position(newrow, newcol));
+                    goatPos.remove(move.getPosition());
+                    return;
                 }
             }
             newrow += move.getDirection().getRow();
             newcol += move.getDirection().getCol();
 
+        }
+
+        if(moving == PETE_SYMBOL){
+            System.out.println("Pete fell off!!");
+            state = GameState.NO_MOVES;
+            return;
+        }
+        else{
+            System.out.println(moving + " fell off!!");
+            return;
+        }
+
+
+    }
+
+    public static void main(String[] args) {
+        try{
+            PetesPike game = new PetesPike("data/petes_pike_5_5_2_0.txt");
+            game.makeMove(new Move(game.petePos, Direction.LEFT));
+            game.makeMove(new Move(game.petePos, Direction.DOWN));
+            System.out.println(game.getState());
+            System.out.println(game.petePos);
+        }
+        catch(PetesPikeException e){
+            System.out.println(e.getMessage());
         }
     }
 }
