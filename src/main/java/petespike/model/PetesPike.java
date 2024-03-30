@@ -103,4 +103,8 @@ public class PetesPike {
 
         return moves;
     }
+
+    public void makeMove(Move move){
+        
+    }
 }
