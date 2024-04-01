@@ -116,6 +116,10 @@ public class PetesPikeCLI {
         return direction;
     }
 
+    /**
+     * Helper function to prompt and get the user's actions
+     * @param game
+     */
     private static void promptUser(PetesPike game){
         while(true){
             System.out.print("Command: ");
