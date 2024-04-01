@@ -93,6 +93,29 @@ public class PetesPikeCLI {
         }
     }
 
+    /**
+     * Helper function to get the direction based on the parsed input
+     * @param parsedInput
+     * @return
+     * @throws PetesPikeException
+     */
+    private static Direction getDirection(String[] parsedInput) throws PetesPikeException {
+        Direction direction;
+
+        if (parsedInput[3].equals("u")){
+            direction = Direction.UP;
+        } else if (parsedInput[3].equals("d")){
+            direction = Direction.DOWN;
+        } else if (parsedInput[3].equals("l")){
+            direction = Direction.LEFT;
+        } else if (parsedInput[3].equals("r")){
+            direction = Direction.RIGHT;
+        } else {
+            throw new PetesPikeException("Invalid input for direction");
+        }
+        return direction;
+    }
+
     private static void promptUser(PetesPike game){
         while(true){
             System.out.print("Command: ");
@@ -102,29 +125,14 @@ public class PetesPikeCLI {
                 if (parsedInput[0].equals("help")){
                     printCommands();
                 } else if (parsedInput[0].equals("board")){
+                    // do nothing, it prints every command anyways
                 } else if (parsedInput[0].equals("reset")){
-                    // TODO: Add reset method to PetesPike class
-                    throw new PetesPikeException("Unsupported command"); // DELETE THIS AFTER
+                    game = new PetesPike(game.getFilename());
                 } else if (parsedInput[0].equals("new") && !parsedInput[1].isEmpty()){
                     game = new PetesPike(parsedInput[1]);
                 } else if (parsedInput[0].equals("move") && !parsedInput[1].isEmpty() && !parsedInput[2].isEmpty() && !parsedInput[3].isEmpty()){
-                    // TODO: Add move functionality
-                    Direction direction;
-
-                    if (parsedInput[3].equals("u")){
-                        direction = Direction.UP;
-                    } else if (parsedInput[3].equals("d")){
-                        direction = Direction.DOWN;
-                    } else if (parsedInput[3].equals("l")){
-                        direction = Direction.LEFT;
-                    } else if (parsedInput[3].equals("r")){
-                        direction = Direction.RIGHT;
-                    } else {
-                        throw new PetesPikeException("Invalid input for direction");
-                    }
-
+                    Direction direction = getDirection(parsedInput);
                     game.makeMove(new Move(new Position(Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2])), direction));
-
                 } else if (parsedInput[0].equals("hint")){
                     // TODO: Add hint functionality
                     throw new PetesPikeException("Unsupported command"); // DELETE THIS AFTER
