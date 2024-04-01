@@ -1,10 +1,10 @@
 package petespike.view;
 
 
-import petespike.model.PetesPike;
-import petespike.model.PetesPikeException;
+import petespike.model.*;
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -24,6 +24,8 @@ public class PetesPikeCLI {
             "hint - displays a valid move given the current board configuration",
             "quit - quits the game"
     };
+
+    private final static Scanner input = new Scanner(System.in);
 
     private final static Map<Character, String> characterColors = new HashMap<>();
 
@@ -91,6 +93,54 @@ public class PetesPikeCLI {
         }
     }
 
+    private static void promptUser(PetesPike game){
+        while(true){
+            System.out.print("Command: ");
+            String stringInput = input.nextLine();
+            String[] parsedInput = stringInput.split(" ");
+            try {
+                if (parsedInput[0].equals("help")){
+                    printCommands();
+                } else if (parsedInput[0].equals("board")){
+                } else if (parsedInput[0].equals("reset")){
+                    // TODO: Add reset method to PetesPike class
+                    throw new PetesPikeException("Unsupported command"); // DELETE THIS AFTER
+                } else if (parsedInput[0].equals("new") && !parsedInput[1].isEmpty()){
+                    game = new PetesPike(parsedInput[1]);
+                } else if (parsedInput[0].equals("move") && !parsedInput[1].isEmpty() && !parsedInput[2].isEmpty() && !parsedInput[3].isEmpty()){
+                    // TODO: Add move functionality
+                    Direction direction;
+
+                    if (parsedInput[3].equals("u")){
+                        direction = Direction.UP;
+                    } else if (parsedInput[3].equals("d")){
+                        direction = Direction.DOWN;
+                    } else if (parsedInput[3].equals("l")){
+                        direction = Direction.LEFT;
+                    } else if (parsedInput[3].equals("r")){
+                        direction = Direction.RIGHT;
+                    } else {
+                        throw new PetesPikeException("Invalid input for direction");
+                    }
+
+                    game.makeMove(new Move(new Position(Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2])), direction));
+
+                } else if (parsedInput[0].equals("hint")){
+                    // TODO: Add hint functionality
+                    throw new PetesPikeException("Unsupported command"); // DELETE THIS AFTER
+                } else if (parsedInput[0].equals("quit")){
+                    return;
+                } else {
+                    throw new PetesPikeException(stringInput);
+                }
+                printBoard(game);
+            } catch (PetesPikeException ppe) {
+                System.out.println("Invalid command: " + ppe.getMessage());
+            }
+
+        }
+    }
+
     /**
      * Main entry to start the game using CLI
      * @param args
@@ -100,9 +150,10 @@ public class PetesPikeCLI {
         Scanner scanner = new Scanner(System.in);
         String filename = scanner.next();
         try{
-            PetesPike ppEngine = new PetesPike(filename);
+            PetesPike game = new PetesPike(filename);
             printCommands();
-            printBoard(ppEngine);
+            printBoard(game);
+            promptUser(game);
         } catch (PetesPikeException ppe){
             System.err.println((ppe.getMessage()));
         }
