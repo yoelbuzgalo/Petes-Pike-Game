@@ -31,11 +31,16 @@ public class PetesPike {
 
     private GameState state;
 
+    private String filename;
+
     
     public PetesPike(String filename) throws PetesPikeException{
+        
         moveCount = 0; 
         goatPos = new HashSet<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(filename))){
+
+        this.filename = filename;
 
         String[] line = reader.readLine().split(" ");
         board = new char[Integer.parseInt(line[0])][Integer.parseInt(line[1])];
@@ -79,6 +84,14 @@ public class PetesPike {
         return cols;
     }
 
+    public String getFilename() {
+        return filename;
+    }
+
+    public Set<Position> getGoatPos() {
+        return goatPos;
+    }
+
     public GameState getState() {
         return state;
     }
@@ -118,7 +131,9 @@ public class PetesPike {
 
     public void makeMove(Move move) throws PetesPikeException{
         //checks if mov is possible
-        if(move.getPosition().getRow() >= this.rows || move.getPosition().getCol() >= this.cols || board[move.getPosition().getRow()][move.getPosition().getCol()] == EMPTY_SYMBOL){
+        if(move.getPosition().getRow() >= this.rows || move.getPosition().getCol() >= this.cols || 
+        move.getPosition().getRow() < 0 || move.getPosition().getCol() < 0 ||
+        board[move.getPosition().getRow()][move.getPosition().getCol()] == EMPTY_SYMBOL){
             throw new PetesPikeException("Invalid move");
         }
 
