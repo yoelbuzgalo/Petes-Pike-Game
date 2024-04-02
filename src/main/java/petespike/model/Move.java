@@ -16,4 +16,9 @@ public class Move {
     public Direction getDirection() {
         return this.direction;
     }
+
+    @Override
+    public String toString() {
+        return this.position + " " + this.direction;
+    }
 }
