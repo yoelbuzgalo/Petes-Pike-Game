@@ -177,15 +177,11 @@ public class PetesPikeCLI {
     }
 
     private static Move getHint(PetesPike game){
-        PetesPike copy = game;
+        //PetesPike copy = game;
         List<Move> moves = game.getPossibleMoves();
         for(Move move : moves){
-            try{
-                copy.makeMove(move);
+            if(game.validMove(move)){
                 return move;
-            }
-            catch(PetesPikeException e){
-                continue;
             }
         }
         return null;
