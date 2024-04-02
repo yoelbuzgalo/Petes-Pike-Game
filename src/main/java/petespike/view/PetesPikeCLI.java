@@ -139,12 +139,9 @@ public class PetesPikeCLI {
                     // do nothing, it prints every command anyways
                 } else if (parsedInput[0].equals("reset")){
                     game = new PetesPike(game.getFilename());
-                } else if (parsedInput[0].equals("new") && !parsedInput[1].isEmpty()){
+                } else if (parsedInput[0].equals("new") && parsedInput.length == 2 && !parsedInput[1].isEmpty()){
                     game = new PetesPike(parsedInput[1]);
                 } else if (parsedInput[0].equals("move") && parsedInput.length == 4 && !parsedInput[1].isEmpty() && !parsedInput[2].isEmpty() && !parsedInput[3].isEmpty()){
-                    // if(parsedInput.length <= 4){
-                    //     throw new PetesPikeException("not enough arguments");
-                    // }
                     // If the game was already won, reject the move
                     checkIfActiveGame(game);
                     Direction direction = getDirection(parsedInput);
