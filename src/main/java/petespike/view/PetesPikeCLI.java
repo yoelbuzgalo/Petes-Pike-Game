@@ -6,6 +6,7 @@ import petespike.model.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.IntStream;
@@ -151,6 +152,26 @@ public class PetesPikeCLI {
             }
 
         }
+    }
+
+
+    private Move getHint(List<Move> moves, PetesPike game){
+        PetesPike copy = game;
+        Move hint = null;
+        for(Move move : moves){
+            try{
+
+                copy.makeMove(move);
+
+                hint = move;
+
+            }
+            catch(PetesPikeException e){
+                continue;
+            }
+        }
+
+        return hint;
     }
 
     /**
