@@ -122,7 +122,7 @@ public class PetesPikeCLI {
      * @param game
      */
     private static void promptUser(PetesPike game){
-        while(true){
+        while(game.getState() != GameState.WON){
             System.out.print("Command: ");
             String stringInput = input.nextLine();
             String[] parsedInput = stringInput.split(" ");
@@ -150,20 +150,22 @@ public class PetesPikeCLI {
             } catch (PetesPikeException ppe) {
                 System.out.println("Invalid command: " + ppe.getMessage());
             }
-
+            
         }
+        System.out.println("Game Won!");
     }
 
 
-    private Move getHint(List<Move> moves, PetesPike game){
+    private Move getHint(PetesPike game){
         PetesPike copy = game;
-        Move hint = null;
+        List<Move> moves = game.getPossibleMoves();
         for(Move move : moves){
             try{
 
                 copy.makeMove(move);
 
-                hint = move;
+                return move;
+
 
             }
             catch(PetesPikeException e){
@@ -171,7 +173,7 @@ public class PetesPikeCLI {
             }
         }
 
-        return hint;
+        return null;
     }
 
     /**
