@@ -4,7 +4,6 @@ package petespike.view;
 import petespike.model.*;
 
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,6 +91,7 @@ public class PetesPikeCLI {
             }
             System.out.println();
         }
+        System.out.println("Moves: " + engine.getMoveCount());
     }
 
     /**
@@ -117,12 +117,18 @@ public class PetesPikeCLI {
         return direction;
     }
 
+    private static void checkIfActiveGame(PetesPike game) throws PetesPikeException {
+        if (game.getState() == GameState.WON) {
+            throw new PetesPikeException("There must be an active game to use this command!");
+        }
+    }
+
     /**
      * Helper function to prompt and get the user's actions
      * @param game
      */
     private static void promptUser(PetesPike game){
-        while(game.getState() != GameState.WON){
+        while(true){
             System.out.print("Command: ");
             String stringInput = input.nextLine();
             String[] parsedInput = stringInput.split(" ");
@@ -136,11 +142,27 @@ public class PetesPikeCLI {
                 } else if (parsedInput[0].equals("new") && !parsedInput[1].isEmpty()){
                     game = new PetesPike(parsedInput[1]);
                 } else if (parsedInput[0].equals("move") && !parsedInput[1].isEmpty() && !parsedInput[2].isEmpty() && !parsedInput[3].isEmpty()){
+
+                    // If the game was already won, reject the move
+                    checkIfActiveGame(game);
                     Direction direction = getDirection(parsedInput);
+
+                    // Make the move
                     game.makeMove(new Move(new Position(Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2])), direction));
+                    // If the move changed the game's state to won - the CLI will print out
+                    if (game.getState() == GameState.WON){
+                        System.out.println("Congratulations, you have scaled the mountain!");
+                    }
                 } else if (parsedInput[0].equals("hint")){
-                    // TODO: Add hint functionality
-                    throw new PetesPikeException("Unsupported command"); // DELETE THIS AFTER
+
+                    checkIfActiveGame(game);
+                    Move hintedMove = getHint(game);
+                    if (hintedMove != null) {
+                        System.out.println("Try: " + hintedMove);
+                    } else {
+                        System.out.println("There is no possible moves!");
+                    }
+
                 } else if (parsedInput[0].equals("quit")){
                     return;
                 } else {
@@ -152,27 +174,20 @@ public class PetesPikeCLI {
             }
             
         }
-        System.out.println("Game Won!");
     }
 
-
-    private Move getHint(PetesPike game){
+    private static Move getHint(PetesPike game){
         PetesPike copy = game;
         List<Move> moves = game.getPossibleMoves();
         for(Move move : moves){
             try{
-
                 copy.makeMove(move);
-
                 return move;
-
-
             }
             catch(PetesPikeException e){
                 continue;
             }
         }
-
         return null;
     }
 
