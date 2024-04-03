@@ -1,6 +1,8 @@
 package petespike.view;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,20 +15,24 @@ import javafx.stage.Stage;
 
 public class PetesPikeUI extends Application {
     // Factory methods
-    private static Button factoryButton(String text){
+    private static Button factoryButton(String text, EventHandler<ActionEvent> eventHandler){
         Button button = new Button(text);
+        button.setOnAction(eventHandler);
         return button;
     };
 
     private static GridPane createPuzzleLayout(){
         GridPane puzzleLayout = new GridPane();
-        // TODO: Create puzzle grid here
         return puzzleLayout;
     }
 
     private static GridPane createMoveButtons(){
         GridPane moveButtonsGrid = new GridPane();
         // TODO: Create move buttons here
+        moveButtonsGrid.add(factoryButton("Up"), 1, 0);
+        moveButtonsGrid.add(factoryButton("Left"), 0, 1);
+        moveButtonsGrid.add(factoryButton("Right"),2, 1);
+        moveButtonsGrid.add(factoryButton("Down"), 1, 2);
         return moveButtonsGrid;
     }
 
