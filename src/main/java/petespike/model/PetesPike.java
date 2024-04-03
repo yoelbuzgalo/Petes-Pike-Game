@@ -134,14 +134,14 @@ public class PetesPike {
         int column = move.getPosition().getCol();
 
         row += move.getDirection().getRow();
-            column += move.getDirection().getCol();
+        column += move.getDirection().getCol();
         while(row > 0 && row < this.rows && column > 0 && column < this.cols){
-            row += move.getDirection().getRow();
-            column += move.getDirection().getCol();
+
             if(board[row][column] != EMPTY_SYMBOL && board[row][column] != MOUNTAINTOP_SYMBOL){
                 return true;
             }
-            ;
+            row += move.getDirection().getRow();
+            column += move.getDirection().getCol();
         }
 
         return false;
