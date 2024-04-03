@@ -160,4 +160,43 @@ public class PetesPikeTest {
             assert false;
         }    
     }
+
+    @Test
+    public void testPossibleMoves(){
+        try{
+            PetesPike game = new PetesPike("data/petes_pike_5_5_2_0.txt");
+
+            int expected = 12;
+            int actual = game.getPossibleMoves().size();
+            assert expected == actual;
+        }
+        catch(PetesPikeException e){
+            assert false;
+        }
+    }
+
+    @Test
+    public void testValidMoveInvalid(){
+        try{
+            PetesPike game = new PetesPike("data/petes_pike_5_5_2_0.txt");
+
+            assert !game.validMove(new Move(new Position(0, 4), Direction.UP));
+        }
+        catch(PetesPikeException e){
+            assert false;
+        }
+    }
+
+    @Test
+    public void testValidMoveValid(){
+        try{
+            PetesPike game = new PetesPike("data/petes_pike_5_5_2_0.txt");
+
+            assert game.validMove(new Move(new Position(0, 4), Direction.LEFT));
+        }
+        catch(PetesPikeException e){
+            assert false;
+        }
+    }
+        
 }

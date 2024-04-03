@@ -177,8 +177,8 @@ public class PetesPikeCLI {
 
     private static Move getHint(PetesPike game){
         //PetesPike copy = game;
-        List<Move> moves = game.getPossibleMoves();
-        for(Move move : moves){
+        //List<Move> moves = game.getPossibleMoves();
+        for(Move move : game.getPossibleMoves()){
             if(game.validMove(move)){
                 return move;
             }
