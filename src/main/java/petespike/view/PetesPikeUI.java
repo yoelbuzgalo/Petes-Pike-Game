@@ -43,16 +43,13 @@ public class PetesPikeUI extends Application {
         GridPane puzzleLayout = createPuzzleLayout();
 
         // Side Box
-        String url = "";
         VBox sideBox = new VBox();
         GridPane moveButtonsGrid = createMoveButtons();
         Button getHintButton = factoryButton("Get Hint");
         HBox hintBox = new HBox();
         // TODO: Add here images into the hint box
 
-
-
-        sideBox.getChildren().addAll(moveButtonsGrid);
+        sideBox.getChildren().addAll(moveButtonsGrid, getHintButton, hintBox);
 
         // Bottom Box
         HBox movesBox = new HBox();
