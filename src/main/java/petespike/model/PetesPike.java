@@ -19,8 +19,8 @@ public class PetesPike {
     char PETE_SYMBOL = 'P';
     Set<Character> GOAT_SYMBOLS = new HashSet<>(Arrays.asList('0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8'));
 
-    private final int rows;
-    private final int cols;
+    private int rows;
+    private int cols;
     private char[][] board;
 
     private int moveCount;
@@ -35,40 +35,44 @@ public class PetesPike {
 
     
     public PetesPike(String filename) throws PetesPikeException{
-        
         moveCount = 0; 
         goatPos = new HashSet<>();
-        try(BufferedReader reader = new BufferedReader(new FileReader(filename))){
-
         this.filename = filename;
+        this.readFile();
+        this.state = GameState.NEW;
+    }
 
-        String[] line = reader.readLine().split(" ");
-        board = new char[Integer.parseInt(line[0])][Integer.parseInt(line[1])];
-        rows = Integer.parseInt(line[0]);
-        cols = Integer.parseInt(line[1]);
+    public void readFile() throws PetesPikeException {
+        try(BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String[] line = reader.readLine().split(" ");
+            board = new char[Integer.parseInt(line[0])][Integer.parseInt(line[1])];
+            this.rows = Integer.parseInt(line[0]);
+            this.cols = Integer.parseInt(line[1]);
 
-        //reads file into board
-        for(int row = 0 ; row < rows; row++){
-            String l = reader.readLine();
+            //reads file into board
+            for (int row = 0; row < rows; row++) {
+                String l = reader.readLine();
 
-            for(int col = 0 ; col < cols ; col++){
-                board[row][col] = l.charAt(col);
-                if(l.charAt(col)== MOUNTAINTOP_SYMBOL){
-                    mountaintopPos = new Position(row, col);
-                }
-                else if(l.charAt(col)== PETE_SYMBOL){
-                    petePos = new Position(row, col);
-                }
-                else if(GOAT_SYMBOLS.contains(l.charAt(col))){
-                    goatPos.add(new Position(row, col));
+                for (int col = 0; col < cols; col++) {
+                    board[row][col] = l.charAt(col);
+                    if (l.charAt(col) == MOUNTAINTOP_SYMBOL) {
+                        mountaintopPos = new Position(row, col);
+                    } else if (l.charAt(col) == PETE_SYMBOL) {
+                        petePos = new Position(row, col);
+                    } else if (GOAT_SYMBOLS.contains(l.charAt(col))) {
+                        goatPos.add(new Position(row, col));
+                    }
                 }
             }
+        } catch (IOException ioe) {
+            throw new PetesPikeException(ioe.getMessage());
         }
     }
-    catch(IOException e){
-        throw new PetesPikeException(e.getMessage());
-    }
 
+    public void reset() throws PetesPikeException{
+        this.moveCount = 0;
+        this.goatPos.clear();
+        this.readFile();
         this.state = GameState.NEW;
     }
 
