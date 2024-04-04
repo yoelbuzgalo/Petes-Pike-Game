@@ -24,9 +24,9 @@ public class PetesPike {
     private final int cols;
     private final char[][] initialBoard;
     private final Position peteInitialPosition;
-    private char[][] board;
+    private final char[][] board;
+    private final Position mountainTopPosition;
     private int moveCount;
-    private Position mountainTopPosition;
     private Position petePosition;
     private GameState state;
 
@@ -45,13 +45,15 @@ public class PetesPike {
             this.cols = Integer.parseInt(firstLine[1]);
             initialBoard = new char[this.rows][this.cols];
             board = new char[this.rows][this.cols];
+
+            Position tempMountainTopPosition = null;
             // reads file into board
             for (int i = 0; i < this.rows; i++) {
                 String line = reader.readLine();
                 for (int j = 0; j < this.cols; j++) {
                     initialBoard[i][j] = line.charAt(j);
                     if (line.charAt(j) == MOUNTAINTOP_SYMBOL) {
-                        this.mountainTopPosition = new Position(i, j);
+                        tempMountainTopPosition = new Position(i, j);
                     } else if (line.charAt(j) == PETE_SYMBOL) {
                         this.petePosition = new Position(i, j);
                     } else if (GOAT_SYMBOLS.contains(line.charAt(j))) {
@@ -59,6 +61,12 @@ public class PetesPike {
                     }
                 }
             }
+
+            if (tempMountainTopPosition == null){
+                throw new IOException("File does not contain mountain top symbol, fatal error");
+            }
+
+            this.mountainTopPosition = tempMountainTopPosition;
 
             // store initial position of pete
             this.peteInitialPosition = petePosition;
@@ -121,7 +129,7 @@ public class PetesPike {
         return board[position.getRow()][position.getCol()];
     }
 
-    public Position getMountaintop(){
+    public Position getMountainTopPosition(){
         return this.mountainTopPosition;
     }
 
