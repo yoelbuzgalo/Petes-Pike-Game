@@ -14,65 +14,78 @@ import java.util.Set;
 //import petespike.view.AsciiColorCodes;
 
 public class PetesPike {
-    char MOUNTAINTOP_SYMBOL = 'T';
-    char EMPTY_SYMBOL = '-';
-    char PETE_SYMBOL = 'P';
-    Set<Character> GOAT_SYMBOLS = new HashSet<>(Arrays.asList('0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8'));
-
-    private int rows;
-    private int cols;
+    private final static char MOUNTAINTOP_SYMBOL = 'T';
+    private final static char EMPTY_SYMBOL = '-';
+    private final static char PETE_SYMBOL = 'P';
+    private final static Set<Character> GOAT_SYMBOLS = new HashSet<>(Arrays.asList('0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8'));
+    private final String filename;
+    private final Set<Position> goatPositions;
+    private final int rows;
+    private final int cols;
+    private final char[][] initialBoard;
+    private final Position peteInitialPosition;
     private char[][] board;
-
     private int moveCount;
-
-    private Position mountaintopPos;
-    private Position petePos;
-    private Set<Position> goatPos;
-
+    private Position mountainTopPosition;
+    private Position petePosition;
     private GameState state;
 
-    private String filename;
 
     
     public PetesPike(String filename) throws PetesPikeException{
-        moveCount = 0; 
-        goatPos = new HashSet<>();
         this.filename = filename;
-        this.readFile();
         this.state = GameState.NEW;
-    }
+        this.moveCount = 0;
+        this.goatPositions = new HashSet<>();
 
-    public void readFile() throws PetesPikeException {
+        // read the file and set the puzzle board
         try(BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            String[] line = reader.readLine().split(" ");
-            board = new char[Integer.parseInt(line[0])][Integer.parseInt(line[1])];
-            this.rows = Integer.parseInt(line[0]);
-            this.cols = Integer.parseInt(line[1]);
-
-            //reads file into board
-            for (int row = 0; row < rows; row++) {
-                String l = reader.readLine();
-
-                for (int col = 0; col < cols; col++) {
-                    board[row][col] = l.charAt(col);
-                    if (l.charAt(col) == MOUNTAINTOP_SYMBOL) {
-                        mountaintopPos = new Position(row, col);
-                    } else if (l.charAt(col) == PETE_SYMBOL) {
-                        petePos = new Position(row, col);
-                    } else if (GOAT_SYMBOLS.contains(l.charAt(col))) {
-                        goatPos.add(new Position(row, col));
+            String[] firstLine = reader.readLine().split(" ");
+            this.rows = Integer.parseInt(firstLine[0]);
+            this.cols = Integer.parseInt(firstLine[1]);
+            initialBoard = new char[this.rows][this.cols];
+            board = new char[this.rows][this.cols];
+            // reads file into board
+            for (int i = 0; i < this.rows; i++) {
+                String line = reader.readLine();
+                for (int j = 0; j < this.cols; j++) {
+                    initialBoard[i][j] = line.charAt(j);
+                    if (line.charAt(j) == MOUNTAINTOP_SYMBOL) {
+                        this.mountainTopPosition = new Position(i, j);
+                    } else if (line.charAt(j) == PETE_SYMBOL) {
+                        this.petePosition = new Position(i, j);
+                    } else if (GOAT_SYMBOLS.contains(line.charAt(j))) {
+                        goatPositions.add(new Position(i, j));
                     }
                 }
             }
+
+            // store initial position of pete
+            this.peteInitialPosition = petePosition;
+            // copy the initial board setting to the playing board
+            this.copyBoard();
+
         } catch (IOException ioe) {
             throw new PetesPikeException(ioe.getMessage());
         }
     }
 
+    /**
+     * Helper function to copy the initial board layout to playing board
+     */
+    private void copyBoard(){
+        // deep copy the initial board to playing board
+        for(int i = 0; i < this.initialBoard.length; i++){
+            this.board[i] = Arrays.copyOf(this.initialBoard[i], this.initialBoard.length);
+        }
+    }
+
     public void reset() throws PetesPikeException{
+        System.out.println("Ran here");
         this.moveCount = 0;
-        this.goatPos.clear();
-        this.readFile();
+        this.copyBoard();
+        this.goatPositions.clear();
+        this.petePosition = this.peteInitialPosition;
         this.state = GameState.NEW;
     }
 
@@ -92,8 +105,8 @@ public class PetesPike {
         return filename;
     }
 
-    public Set<Position> getGoatPos() {
-        return goatPos;
+    public Set<Position> getGoatPositions() {
+        return goatPositions;
     }
 
     public GameState getState() {
@@ -109,7 +122,7 @@ public class PetesPike {
     }
 
     public Position getMountaintop(){
-        return this.mountaintopPos;
+        return this.mountainTopPosition;
     }
 
     public char[][] getBoard() {
@@ -121,10 +134,10 @@ public class PetesPike {
         List<Move> moves = new LinkedList<>();
         
         for(Direction direction : Direction.values()){
-            moves.add(new Move(petePos, direction));
+            moves.add(new Move(petePosition, direction));
         }  
 
-        for(Position position : goatPos){
+        for(Position position : goatPositions){
             for(Direction direction : Direction.values()){
                 moves.add(new Move(position, direction));
             }  
@@ -167,39 +180,39 @@ public class PetesPike {
         }
 
         //new col and row for moved char
-        int newrow = move.getPosition().getRow();
-        int newcol = move.getPosition().getCol();
+        int newRow = move.getPosition().getRow();
+        int newCol = move.getPosition().getCol();
 
         //holds moving char and changes that position to an empty symbol
         char moving = board[move.getPosition().getRow()][move.getPosition().getCol()];
         board[move.getPosition().getRow()][move.getPosition().getCol()] = EMPTY_SYMBOL;
 
         //loops until out of range of board
-        while((newrow >= 0 && newrow < this.rows) && (newcol >= 0 && newcol < this.cols)){
+        while((newRow >= 0 && newRow < this.rows) && (newCol >= 0 && newCol < this.cols)){
             //checks if there is a piece to stop moving char
-            if(board[newrow][newcol] != EMPTY_SYMBOL && board[newrow][newcol] != MOUNTAINTOP_SYMBOL){
+            if(board[newRow][newCol] != EMPTY_SYMBOL && board[newRow][newCol] != MOUNTAINTOP_SYMBOL){
 
-                newrow -= move.getDirection().getRow();
-                newcol -= move.getDirection().getCol();
+                newRow -= move.getDirection().getRow();
+                newCol -= move.getDirection().getCol();
                 //sets new position to char
-                board[newrow][newcol] = moving;
+                board[newRow][newCol] = moving;
 
                 if(moving == PETE_SYMBOL){
-                    petePos = new Position(newrow, newcol);
+                    petePosition = new Position(newRow, newCol);
                     //checks if game won
-                    if(petePos.equals(mountaintopPos)){
+                    if(petePosition.equals(mountainTopPosition)){
                         this.state = GameState.WON;
                     }
                     return;
                 }
                 else{
-                    goatPos.add(new Position(newrow, newcol));
-                    goatPos.remove(move.getPosition());
+                    goatPositions.add(new Position(newRow, newCol));
+                    goatPositions.remove(move.getPosition());
                     return;
                 }
             }
-            newrow += move.getDirection().getRow();
-            newcol += move.getDirection().getCol();
+            newRow += move.getDirection().getRow();
+            newCol += move.getDirection().getCol();
 
         }
 
@@ -215,20 +228,5 @@ public class PetesPike {
         }
 
 
-    }
-
-    public static void main(String[] args) {
-        try{
-            PetesPike game = new PetesPike("data/petes_pike_5_5_2_0.txt");
-            game.makeMove(new Move(game.petePos, Direction.LEFT));
-            game.makeMove(new Move(game.petePos, Direction.DOWN));
-            System.out.println(game.getState());
-            System.out.println(game.petePos);
-            System.out.println(game.mountaintopPos);
-            System.out.println();
-        }
-        catch(PetesPikeException e){
-            System.out.println(e.getMessage());
-        }
     }
 }

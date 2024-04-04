@@ -153,7 +153,7 @@ public class PetesPikeTest {
 
 
 
-            assert game.getGoatPos().contains(new Position(2, 2));
+            assert game.getGoatPositions().contains(new Position(2, 2));
     
         }
         catch(PetesPikeException e){
