@@ -16,45 +16,52 @@ import petespike.model.PetesPike;
 
 public class PetesPikeUI extends Application {
     // Factory methods
-    private static Button factoryButton(String text, EventHandler<ActionEvent> eventHandler){
+    private static Button createButton(String text, EventHandler<ActionEvent> eventHandler){
         Button button = new Button(text);
         button.setOnAction(eventHandler);
         return button;
     };
 
-    private static GridPane createPuzzleLayout(){
+    private static GridPane createPuzzleLayout(char[][] board){
         GridPane puzzleLayout = new GridPane();
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board.length; j++){
+                // puzzleLayout.add();
+            }
+        }
         return puzzleLayout;
     }
 
     private static GridPane createMoveButtons(){
         GridPane moveButtonsGrid = new GridPane();
         // TODO: Create move buttons here
-        moveButtonsGrid.add(factoryButton("Up", (x) -> System.out.println("Unsupported command")), 1, 0);
-        moveButtonsGrid.add(factoryButton("Left", (x) -> System.out.println("Unsupported command")), 0, 1);
-        moveButtonsGrid.add(factoryButton("Right", (x) -> System.out.println("Unsupported command")),2, 1);
-        moveButtonsGrid.add(factoryButton("Down", (x) -> System.out.println("Unsupported command")), 1, 2);
+        moveButtonsGrid.add(createButton("Up", (x) -> System.out.println("Unsupported command")), 1, 0);
+        moveButtonsGrid.add(createButton("Left", (x) -> System.out.println("Unsupported command")), 0, 1);
+        moveButtonsGrid.add(createButton("Right", (x) -> System.out.println("Unsupported command")),2, 1);
+        moveButtonsGrid.add(createButton("Down", (x) -> System.out.println("Unsupported command")), 1, 2);
         return moveButtonsGrid;
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        String filePath = "data/petes_pike_5_5_2_0.txt";
+        // Initialize the game engine
+        String filePath = "data/petes_pike_5_5_2_0.txt"; // default starting puzzle
         PetesPike engine = new PetesPike(filePath);
+
         // Top Part of the UI (Reset, File Address and New Puzzle)
         HBox puzzleInputBox = new HBox();
-        Button resetButton = factoryButton("Reset", new ResetEventHandler(engine));
+        Button resetButton = createButton("Reset",(x) -> engine.reset());
         TextField fileAddressInput = new TextField();
-        Button newPuzzleButton = factoryButton("New Puzzle", new NewPuzzleEventHandler(engine, fileAddressInput.getText()));
+        Button newPuzzleButton = createButton("New Puzzle", new NewPuzzleEventHandler(engine, fileAddressInput));
         puzzleInputBox.getChildren().addAll(resetButton, fileAddressInput, newPuzzleButton);
 
         // Grid Box
-        GridPane puzzleLayout = createPuzzleLayout();
+        GridPane puzzleLayout = createPuzzleLayout(engine.getBoard());
 
         // Side Box
         VBox sideBox = new VBox();
         GridPane moveButtonsGrid = createMoveButtons();
-        Button getHintButton = factoryButton("Get Hint", (x) -> System.out.println("Unsupported command"));
+        Button getHintButton = createButton("Get Hint", (x) -> System.out.println("Unsupported command"));
         HBox hintBox = new HBox();
         // TODO: Add here images into the hint box
 
@@ -62,7 +69,7 @@ public class PetesPikeUI extends Application {
 
         // Bottom Box
         HBox movesBox = new HBox();
-        Label label = new Label("Moves: 0");
+        Label label = new Label("Moves: " + engine.getMoveCount());
         movesBox.getChildren().addAll(label);
 
         BorderPane bp = new BorderPane();

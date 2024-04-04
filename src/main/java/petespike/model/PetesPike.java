@@ -91,9 +91,8 @@ public class PetesPike {
 
     /**
      * Reset functionality to reset the game to initial condition
-     * @throws PetesPikeException
      */
-    public void reset() throws PetesPikeException{
+    public void reset() {
         this.moveCount = 0;
         this.copyBoard();
         this.goatPositions.clear();
