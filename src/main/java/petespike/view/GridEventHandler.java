@@ -25,16 +25,8 @@ public class GridEventHandler implements EventHandler<ActionEvent>{
 
     @Override
     public void handle(ActionEvent event) {
+        System.out.println("This button was clicked at: " + "(" + this.col + "," + this.row + ")");
         UI.setClickedPosition(this.position);
-        if(UI.getClickDirection() != null && UI.getClickedPosition() != null && UI.getEngine().validMove(new Move(position, UI.getClickDirection()))){
-            try{
-            UI.getEngine().makeMove(new Move(position, UI.getClickDirection()));
-            }
-            catch(PetesPikeException e){
-                System.out.println(e.getMessage());
-            }
-        }
-        
     }
     
 }

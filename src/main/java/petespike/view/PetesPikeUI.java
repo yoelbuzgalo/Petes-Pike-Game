@@ -19,11 +19,10 @@ import petespike.model.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PetesPikeUI extends Application {
+public class PetesPikeUI extends Application implements PetesPikeObserver {
     private static final Map<Character, Image> CHARACTER_IMAGES = new HashMap<>();
     private PetesPike engine;
     private Position clickedPosition;
-    private Direction clickDirection;
 
     static {
         CHARACTER_IMAGES.put('T', new Image("file:data/images/mountaintop.png"));
@@ -75,15 +74,14 @@ public class PetesPikeUI extends Application {
     private GridPane createMoveButtons(){
         GridPane moveButtonsGrid = new GridPane();
         moveButtonsGrid.add(createButton("Up", (x) -> {
-            this.clickDirection = Direction.UP;
             try {
+                System.out.println("Got to here, the clickedPosition was: " + this.clickedPosition);
                 this.engine.makeMove(new Move(this.clickedPosition, Direction.UP));
             } catch (PetesPikeException e) {
                 System.out.println(e.getMessage());
             }
         }), 1, 0);
         moveButtonsGrid.add(createButton("Left", (x) -> {
-            this.clickDirection = Direction.LEFT;
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, Direction.LEFT));
             } catch (PetesPikeException e) {
@@ -91,7 +89,6 @@ public class PetesPikeUI extends Application {
             }
         }), 0, 1);
         moveButtonsGrid.add(createButton("Right", (x) -> {
-            this.clickDirection = Direction.RIGHT;
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, Direction.RIGHT));
             } catch (PetesPikeException e) {
@@ -99,7 +96,6 @@ public class PetesPikeUI extends Application {
             }
         }),2, 1);
         moveButtonsGrid.add(createButton("Down", (x) -> {
-            this.clickDirection = Direction.DOWN;
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, Direction.DOWN));
             } catch (PetesPikeException e) {
@@ -113,15 +109,10 @@ public class PetesPikeUI extends Application {
         this.clickedPosition = clickedPosition;
     }
 
-    public Position getClickedPosition() {
-        return clickedPosition;
-    }
+    @Override
+    public void pieceMoved(Position from, Position to) {
+        System.out.println("Moving piece from: " + from + " ,to: " + to);
 
-    public Direction getClickDirection() {
-        return clickDirection;
-    }
-    public PetesPike getEngine() {
-        return engine;
     }
 
     @Override
@@ -130,6 +121,7 @@ public class PetesPikeUI extends Application {
         String filePath = "data/petes_pike_5_5_2_0.txt"; // default starting puzzle
         this.engine = new PetesPike(filePath);
         this.clickedPosition = null;
+        this.engine.registerObserver(this);
 
         // Top Part of the UI (Reset, File Address and New Puzzle)
         HBox puzzleInputBox = new HBox();
