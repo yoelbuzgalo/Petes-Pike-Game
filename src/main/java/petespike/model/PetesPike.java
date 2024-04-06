@@ -11,22 +11,28 @@ import java.util.List;
 //import java.util.Map;
 import java.util.Set;
 
+import petespike.view.PetesPikeObserver;
+
 public class PetesPike {
     private final static char MOUNTAINTOP_SYMBOL = 'T';
     private final static char EMPTY_SYMBOL = '-';
     private final static char PETE_SYMBOL = 'P';
     private final static Set<Character> GOAT_SYMBOLS = new HashSet<>(Arrays.asList('0' , '1' , '2' , '3' , '4' , '5' , '6' , '7' , '8'));
+
     private final String filename;
-    private final Set<Position> goatPositions;
     private final int rows;
     private final int cols;
     private final char[][] initialBoard;
-    private final Position peteInitialPosition;
-    private final char[][] board;
     private final Position mountainTopPosition;
+    private final Position peteInitialPosition;
+
+    private Set<Position> goatPositions;
+    private char[][] board;
     private int moveCount;
     private Position petePosition;
     private GameState state;
+
+    private PetesPikeObserver observer;
 
     /**
      * Main constructor of the game engine
@@ -157,6 +163,14 @@ public class PetesPike {
         return moves;
     }
 
+    public void registerObserver(PetesPikeObserver observer){
+        this.observer = observer;
+    }
+
+    private void notifyObserver(Position from , Position to){
+        this.observer.pieceMoved(from, to);
+    }
+
     /**
      * This function checks whether a move is valid or not
      * @param move
@@ -220,6 +234,7 @@ public class PetesPike {
 
                 if(moving == PETE_SYMBOL){
                     petePosition = new Position(newRow, newCol);
+                    notifyObserver(move.getPosition(), petePosition);
                     //checks if game won
                     if(petePosition.equals(mountainTopPosition)){
                         this.state = GameState.WON;
@@ -228,6 +243,7 @@ public class PetesPike {
                 else{
                     goatPositions.add(new Position(newRow, newCol));
                     goatPositions.remove(move.getPosition());
+                    notifyObserver(move.getPosition(), new Position(newRow, newCol));
                 }
                 return;
             }
