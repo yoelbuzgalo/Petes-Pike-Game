@@ -46,6 +46,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     private static Button createButton(String text, EventHandler<ActionEvent> eventHandler){
         Button button = new Button(text);
         button.setOnAction(eventHandler);
+        
         return button;
     };
 
@@ -56,9 +57,13 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         if (image != null){
             button.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, false, false))));
         }
+        else{
+            button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0))));
+        }
         Border border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1), new Insets(5)));
         button.setBorder(border);
         button.setOnAction(handler);
+        
         return button;
     }
 
@@ -71,6 +76,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 puzzleLayout.add(createGridElement(CHARACTER_IMAGES.get(board[i][j]) , new GridEventHandler(i, j , this)), j, i );
             }
         }
+
         return puzzleLayout;
     }
 
@@ -127,6 +133,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
             }
         }
     }
+
 
     @Override
     public void start(Stage stage) throws Exception {
