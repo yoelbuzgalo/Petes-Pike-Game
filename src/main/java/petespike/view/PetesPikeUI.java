@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class PetesPikeUI extends Application implements PetesPikeObserver {
     private static final Map<Character, Image> CHARACTER_IMAGES = new HashMap<>();
+    private final Map<Position, Button> gridButtons = new HashMap<>();
     private PetesPike engine;
     private Position clickedPosition;
     private GridPane puzzleLayout;
@@ -90,7 +91,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         puzzleLayout.setBorder(blackBorder);
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board.length; j++){
-                puzzleLayout.add(createGridElement(CHARACTER_IMAGES.get(board[i][j]) , new GridEventHandler(i, j , this)), j, i );
+                Button gridElement = createGridElement(CHARACTER_IMAGES.get(board[i][j]) , new GridEventHandler(i, j , this));
+                puzzleLayout.add(gridElement, j, i );
+                this.gridButtons.put(new Position(i, j), gridElement);
             }
         }
         return puzzleLayout;
@@ -133,16 +136,16 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     public void pieceMoved(Position from, Position to) {
         System.out.println("Moving piece from: " + from + " ,to: " + to);
         ObservableList<Node> children = this.puzzleLayout.getChildren();
-        Background target = new Background(new BackgroundImage(CHARACTER_IMAGES.get(this.engine.getBoard()[to.getRow()][to.getCol()]), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, false, false)));
-        for(Node node: children){
-            Button castedNode = (Button) node;
-            if(GridPane.getRowIndex(node) == to.getRow() && GridPane.getColumnIndex(node) == to.getCol()){
-                castedNode.setBackground(target);
-            }
-            if(GridPane.getRowIndex(node) == from.getRow() && GridPane.getColumnIndex(node) == from.getCol()){
-                castedNode.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0))));
-            }
+
+        Button fromElement = this.gridButtons.get(from);
+        Button toElement = this.gridButtons.get(to);
+        fromElement.setBackground(createElementBackground(null));
+        try {
+            toElement.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(to))));
+        } catch (PetesPikeException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
 
