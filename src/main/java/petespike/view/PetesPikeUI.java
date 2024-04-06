@@ -2,6 +2,7 @@ package petespike.view;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -22,6 +23,8 @@ public class PetesPikeUI extends Application {
     private static final Map<Character, Image> CHARACTER_IMAGES = new HashMap<>();
     private PetesPike engine;
     private Position clickedPosition;
+    private Direction clickDirection;
+
     static {
         CHARACTER_IMAGES.put('T', new Image("file:data/images/mountaintop.png"));
         CHARACTER_IMAGES.put('P', new Image("file:data/images/pete.png"));
@@ -44,7 +47,7 @@ public class PetesPikeUI extends Application {
         return button;
     };
 
-    private static Button createGridElement(Image image){
+    private static Button createGridElement(Image image , EventHandler<ActionEvent> handler){
         Button button = new Button();
         button.setPrefHeight(100);
         button.setPrefWidth(100);
@@ -53,16 +56,17 @@ public class PetesPikeUI extends Application {
         }
         Border border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1), new Insets(5)));
         button.setBorder(border);
+        button.setOnAction(handler);
         return button;
     }
 
-    private static GridPane createPuzzleLayout(char[][] board){
+    private GridPane createPuzzleLayout(char[][] board){
         GridPane puzzleLayout = new GridPane();
         Border blackBorder = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
         puzzleLayout.setBorder(blackBorder);
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board.length; j++){
-                puzzleLayout.add(createGridElement(CHARACTER_IMAGES.get(board[i][j])), j, i);
+                puzzleLayout.add(createGridElement(CHARACTER_IMAGES.get(board[i][j]) , new GridEventHandler(i, j , this)), j, i );
             }
         }
         return puzzleLayout;
@@ -71,6 +75,7 @@ public class PetesPikeUI extends Application {
     private GridPane createMoveButtons(){
         GridPane moveButtonsGrid = new GridPane();
         moveButtonsGrid.add(createButton("Up", (x) -> {
+            this.clickDirection = Direction.UP;
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, Direction.UP));
             } catch (PetesPikeException e) {
@@ -78,6 +83,7 @@ public class PetesPikeUI extends Application {
             }
         }), 1, 0);
         moveButtonsGrid.add(createButton("Left", (x) -> {
+            this.clickDirection = Direction.LEFT;
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, Direction.LEFT));
             } catch (PetesPikeException e) {
@@ -85,6 +91,7 @@ public class PetesPikeUI extends Application {
             }
         }), 0, 1);
         moveButtonsGrid.add(createButton("Right", (x) -> {
+            this.clickDirection = Direction.RIGHT;
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, Direction.RIGHT));
             } catch (PetesPikeException e) {
@@ -92,6 +99,7 @@ public class PetesPikeUI extends Application {
             }
         }),2, 1);
         moveButtonsGrid.add(createButton("Down", (x) -> {
+            this.clickDirection = Direction.DOWN;
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, Direction.DOWN));
             } catch (PetesPikeException e) {
@@ -99,6 +107,21 @@ public class PetesPikeUI extends Application {
             }
         }), 1, 2);
         return moveButtonsGrid;
+    }
+
+    public void setClickedPosition(Position clickedPosition) {
+        this.clickedPosition = clickedPosition;
+    }
+
+    public Position getClickedPosition() {
+        return clickedPosition;
+    }
+
+    public Direction getClickDirection() {
+        return clickDirection;
+    }
+    public PetesPike getEngine() {
+        return engine;
     }
 
     @Override
@@ -141,5 +164,9 @@ public class PetesPikeUI extends Application {
         stage.setScene(scene);
         stage.setTitle("Petes Pike Game");
         stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
