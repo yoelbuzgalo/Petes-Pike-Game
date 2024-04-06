@@ -1,10 +1,12 @@
 package petespike.view;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,6 +25,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     private static final Map<Character, Image> CHARACTER_IMAGES = new HashMap<>();
     private PetesPike engine;
     private Position clickedPosition;
+    private GridPane puzzleLayout;
 
     static {
         CHARACTER_IMAGES.put('T', new Image("file:data/images/mountaintop.png"));
@@ -112,7 +115,17 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     @Override
     public void pieceMoved(Position from, Position to) {
         System.out.println("Moving piece from: " + from + " ,to: " + to);
-
+        ObservableList<Node> children = this.puzzleLayout.getChildren();
+        Background target = new Background(new BackgroundImage(CHARACTER_IMAGES.get(this.engine.getBoard()[to.getRow()][to.getCol()]), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, false, false)));
+        for(Node node: children){
+            Button castedNode = (Button) node;
+            if(GridPane.getRowIndex(node) == to.getRow() && GridPane.getColumnIndex(node) == to.getCol()){
+                castedNode.setBackground(target);
+            }
+            if(GridPane.getRowIndex(node) == from.getRow() && GridPane.getColumnIndex(node) == from.getCol()){
+                castedNode.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0))));
+            }
+        }
     }
 
     @Override
@@ -131,7 +144,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         puzzleInputBox.getChildren().addAll(resetButton, fileAddressInput, newPuzzleButton);
 
         // Grid Box
-        GridPane puzzleLayout = createPuzzleLayout(engine.getBoard());
+        this.puzzleLayout = createPuzzleLayout(engine.getBoard());
 
         // Side Box
         VBox sideBox = new VBox();
