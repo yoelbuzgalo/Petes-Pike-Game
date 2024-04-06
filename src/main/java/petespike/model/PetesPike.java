@@ -164,7 +164,6 @@ public class PetesPike {
     }
 
     public void registerObserver(PetesPikeObserver observer){
-        System.out.println("Registered observer" + observer);
         this.observer = observer;
     }
 

@@ -3,7 +3,6 @@ package petespike.view;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -12,12 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import petespike.model.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,32 +38,52 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         CHARACTER_IMAGES.put('8', new Image("file:data/images/cyan_goat.png"));
     }
 
-
-    // Factory methods
+    /**
+     * Factory method that creates a standard button with event handler
+     * @param text
+     * @param eventHandler
+     * @return
+     */
     private static Button createButton(String text, EventHandler<ActionEvent> eventHandler){
         Button button = new Button(text);
         button.setOnAction(eventHandler);
-        
         return button;
     };
 
+    /**
+     * Helper function to create a background for buttons
+     * @param image
+     * @return
+     */
+    private static Background createElementBackground(Image image){
+        if (image == null){
+            return new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0)));
+        }
+        return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, false, false)));
+    }
+
+    /**
+     * Creates elements in a grid
+     * @param image Pass in an image, it can be null
+     * @param handler Pass in
+     * @return
+     */
     private static Button createGridElement(Image image , EventHandler<ActionEvent> handler){
         Button button = new Button();
         button.setPrefHeight(100);
         button.setPrefWidth(100);
-        if (image != null){
-            button.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, false, false))));
-        }
-        else{
-            button.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0))));
-        }
+        button.setBackground(createElementBackground(image));
         Border border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1), new Insets(5)));
         button.setBorder(border);
         button.setOnAction(handler);
-        
         return button;
     }
 
+    /**
+     * Creates a puzzle layout given a board configuration
+     * @param board Pass in the board configuration
+     * @return Returns a grid layout of the puzzle
+     */
     private GridPane createPuzzleLayout(char[][] board){
         GridPane puzzleLayout = new GridPane();
         Border blackBorder = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
@@ -76,44 +93,38 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 puzzleLayout.add(createGridElement(CHARACTER_IMAGES.get(board[i][j]) , new GridEventHandler(i, j , this)), j, i );
             }
         }
-
         return puzzleLayout;
     }
 
+    /**
+     * Helper function to handle a move button click
+     * @param direction Pass in the direction of move
+     */
+    private void handleMoveButtonClick(Direction direction) {
+        try {
+            this.engine.makeMove(new Move(this.clickedPosition, direction));
+        } catch (PetesPikeException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Creates a grid of move buttons
+     * @return Returns a grid of move buttons
+     */
     private GridPane createMoveButtons(){
         GridPane moveButtonsGrid = new GridPane();
-        moveButtonsGrid.add(createButton("Up", (x) -> {
-            try {
-                System.out.println("Got to here, the clickedPosition was: " + this.clickedPosition);
-                this.engine.makeMove(new Move(this.clickedPosition, Direction.UP));
-            } catch (PetesPikeException e) {
-                System.out.println(e.getMessage());
-            }
-        }), 1, 0);
-        moveButtonsGrid.add(createButton("Left", (x) -> {
-            try {
-                this.engine.makeMove(new Move(this.clickedPosition, Direction.LEFT));
-            } catch (PetesPikeException e) {
-                System.out.println(e.getMessage());
-            }
-        }), 0, 1);
-        moveButtonsGrid.add(createButton("Right", (x) -> {
-            try {
-                this.engine.makeMove(new Move(this.clickedPosition, Direction.RIGHT));
-            } catch (PetesPikeException e) {
-                System.out.println(e.getMessage());
-            }
-        }),2, 1);
-        moveButtonsGrid.add(createButton("Down", (x) -> {
-            try {
-                this.engine.makeMove(new Move(this.clickedPosition, Direction.DOWN));
-            } catch (PetesPikeException e) {
-                System.out.println(e.getMessage());
-            }
-        }), 1, 2);
+        moveButtonsGrid.add(createButton("Up", (x) -> handleMoveButtonClick(Direction.UP)), 1, 0);
+        moveButtonsGrid.add(createButton("Left", (x) -> handleMoveButtonClick(Direction.LEFT)), 0, 1);
+        moveButtonsGrid.add(createButton("Right", (x) -> handleMoveButtonClick(Direction.RIGHT)),2, 1);
+        moveButtonsGrid.add(createButton("Down", (x) -> handleMoveButtonClick(Direction.DOWN)), 1, 2);
         return moveButtonsGrid;
     }
 
+    /**
+     * Setter method to set the clicked position of grid buttons
+     * @param clickedPosition
+     */
     public void setClickedPosition(Position clickedPosition) {
         this.clickedPosition = clickedPosition;
     }
@@ -145,7 +156,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
         // Top Part of the UI (Reset, File Address and New Puzzle)
         HBox puzzleInputBox = new HBox();
-        Button resetButton = createButton("Reset",(x) -> engine.reset());
+        Button resetButton = createButton("Reset",(x) -> this.engine.reset());
         TextField fileAddressInput = new TextField();
         Button newPuzzleButton = createButton("New Puzzle", new NewPuzzleEventHandler(engine, fileAddressInput));
         puzzleInputBox.getChildren().addAll(resetButton, fileAddressInput, newPuzzleButton);
