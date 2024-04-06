@@ -5,7 +5,6 @@ import petespike.model.*;
 
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.IntStream;
@@ -27,20 +26,20 @@ public class PetesPikeCLI {
 
     private final static Scanner input = new Scanner(System.in);
 
-    private final static Map<Character, String> characterColors = new HashMap<>();
+    private final static Map<Character, String> CHARACTER_COLORS = new HashMap<>();
 
     static {
         // Associate each unique symbol to its color piece
-        characterColors.put('P', AsciiColorCodes.RED);
-        characterColors.put('0', AsciiColorCodes.BLUE);
-        characterColors.put('1', AsciiColorCodes.ORANGE);
-        characterColors.put('2', AsciiColorCodes.GREEN);
-        characterColors.put('3', AsciiColorCodes.YELLOW);
-        characterColors.put('4', AsciiColorCodes.MAGENTA);
-        characterColors.put('5', AsciiColorCodes.GOLD);
-        characterColors.put('6', AsciiColorCodes.PURPLE);
-        characterColors.put('7', AsciiColorCodes.LT_GRAY);
-        characterColors.put('8', AsciiColorCodes.CYAN);
+        CHARACTER_COLORS.put('P', AsciiColorCodes.RED);
+        CHARACTER_COLORS.put('0', AsciiColorCodes.BLUE);
+        CHARACTER_COLORS.put('1', AsciiColorCodes.ORANGE);
+        CHARACTER_COLORS.put('2', AsciiColorCodes.GREEN);
+        CHARACTER_COLORS.put('3', AsciiColorCodes.YELLOW);
+        CHARACTER_COLORS.put('4', AsciiColorCodes.MAGENTA);
+        CHARACTER_COLORS.put('5', AsciiColorCodes.GOLD);
+        CHARACTER_COLORS.put('6', AsciiColorCodes.PURPLE);
+        CHARACTER_COLORS.put('7', AsciiColorCodes.LT_GRAY);
+        CHARACTER_COLORS.put('8', AsciiColorCodes.CYAN);
     }
 
 
@@ -65,9 +64,9 @@ public class PetesPikeCLI {
         if (board[row][col] == 'T') {
             return "+";
         } else if (board[row][col] == 'P'){
-            return characterColors.get(board[row][col]) + 'P' + AsciiColorCodes.RESET;
+            return CHARACTER_COLORS.get(board[row][col]) + 'P' + AsciiColorCodes.RESET;
         } else if (Character.isDigit(board[row][col])) {
-            return characterColors.get(board[row][col]) + 'G' + AsciiColorCodes.RESET;
+            return CHARACTER_COLORS.get(board[row][col]) + 'G' + AsciiColorCodes.RESET;
         }
         return "-";
     }
