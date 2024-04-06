@@ -138,7 +138,7 @@ public class PetesPikeCLI {
                 } else if (parsedInput[0].equals("board")){
                     // do nothing, it prints every command anyways
                 } else if (parsedInput[0].equals("reset")){
-                    game = new PetesPike(game.getFilename());
+                    game.reset();
                 } else if (parsedInput[0].equals("new") && parsedInput.length == 2 && !parsedInput[1].isEmpty()){
                     game = new PetesPike(parsedInput[1]);
                 } else if (parsedInput[0].equals("move") && parsedInput.length == 4 && !parsedInput[1].isEmpty() && !parsedInput[2].isEmpty() && !parsedInput[3].isEmpty()){
