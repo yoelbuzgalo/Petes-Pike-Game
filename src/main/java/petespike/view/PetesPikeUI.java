@@ -23,7 +23,8 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     private PetesPike engine;
     private Position clickedPosition;
     private GridPane puzzleLayout;
-
+    private Label movecount;
+    private Label messagelabel;
     static {
         CHARACTER_IMAGES.put('T', new Image("file:data/images/mountaintop.png"));
         CHARACTER_IMAGES.put('P', new Image("file:data/images/pete.png"));
@@ -110,7 +111,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         try {
             this.engine.makeMove(new Move(this.clickedPosition, direction));
         } catch (PetesPikeException e){
-            System.out.println(e.getMessage());
+            this.messagelabel.setText(e.getMessage());
         }
     }
 
@@ -138,6 +139,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     @Override
     public void pieceMoved(Position from, Position to) {
         System.out.println("Moving piece from: " + from + " ,to: " + to);
+        this.movecount.setText("Moves: " + engine.getMoveCount());
         Button fromElement = this.gridButtons.get(from);
         Button toElement = this.gridButtons.get(to);
         fromElement.setBackground(createElementBackground(null));
@@ -209,15 +211,17 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         sideBox.getChildren().addAll(moveButtonsGrid, getHintButton, hintBox);
 
         // Bottom Box
-        HBox movesBox = new HBox();
-        Label label = new Label("Moves: " + engine.getMoveCount());
-        movesBox.getChildren().addAll(label);
+        BorderPane messagepane = new BorderPane();
+        messagelabel = new Label("Display message here");
+        this.movecount = new Label("Moves: " + engine.getMoveCount());
+        messagepane.setRight(movecount);
+        messagepane.setLeft(messagelabel);
 
         BorderPane bp = new BorderPane();
         bp.setTop(puzzleInputBox);
         bp.setCenter(puzzleLayout);
         bp.setRight(sideBox);
-        bp.setBottom(movesBox);
+        bp.setBottom(messagepane);
         Scene scene = new Scene(bp);
         stage.setScene(scene);
         stage.setTitle("Petes Pike Game");
