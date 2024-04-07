@@ -23,13 +23,8 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     private PetesPike engine;
     private Position clickedPosition;
     private GridPane puzzleLayout;
-<<<<<<< HEAD
     private Label movecount;
     private Label messagelabel;
-=======
-    private Label statusLabel;
-
->>>>>>> 0449e71fe9b812ccb43406c82a4537209baa77c5
     static {
         CHARACTER_IMAGES.put('T', new Image("file:data/images/mountaintop.png"));
         CHARACTER_IMAGES.put('P', new Image("file:data/images/pete.png"));
@@ -180,7 +175,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
     @Override
     public void displayMessage(String message) {
-        this.statusLabel.setText(message);
+        this.messagelabel.setText(message);
     }
 
     public Image getImage(Position position){
