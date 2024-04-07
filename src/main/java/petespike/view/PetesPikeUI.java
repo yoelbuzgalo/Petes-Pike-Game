@@ -221,18 +221,11 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         sideBox.getChildren().addAll(moveButtonsGrid, getHintButton, hintBox);
 
         // Bottom Box
-<<<<<<< HEAD
         BorderPane messagepane = new BorderPane();
         messagelabel = new Label("Display message here");
         this.movecount = new Label("Moves: " + engine.getMoveCount());
         messagepane.setRight(movecount);
         messagepane.setLeft(messagelabel);
-=======
-        HBox movesBox = new HBox();
-        this.statusLabel = new Label();
-        Label movesLabel = new Label("Moves: " + engine.getMoveCount());
-        movesBox.getChildren().addAll(this.statusLabel, movesLabel);
->>>>>>> 0449e71fe9b812ccb43406c82a4537209baa77c5
 
         BorderPane bp = new BorderPane();
         bp.setTop(puzzleInputBox);
