@@ -29,6 +29,7 @@ public class HintEventHandler implements EventHandler<ActionEvent> {
     public void handle(ActionEvent event) {
         Move hinted = this.engine.getHint();
         System.out.println(hinted);
+        this.goatlabel.setText(hinted.toString());
 //        System.out.println(goatlabel.getBackground());
 //        directionlabel.setText(hinted.getDirection().name());
 //        goatlabel.setBackground(new Background(new BackgroundImage( UI.getImage(hinted.getPosition()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER , BackgroundSize.DEFAULT)));
