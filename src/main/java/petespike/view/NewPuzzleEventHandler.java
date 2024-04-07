@@ -7,20 +7,20 @@ import petespike.model.PetesPike;
 import petespike.model.PetesPikeException;
 
 public class NewPuzzleEventHandler implements EventHandler<ActionEvent> {
-    private PetesPike game;
     private final TextField fileNameInput;
+    private final PetesPikeUI display;
 
-    public NewPuzzleEventHandler(PetesPike game, TextField fileNameInput){
-        this.game = game;
+    public NewPuzzleEventHandler(TextField fileNameInput, PetesPikeUI display){
         this.fileNameInput = fileNameInput;
+        this.display = display;
     }
 
     @Override
     public void handle(ActionEvent event) {
         try {
-            this.game = new PetesPike(this.fileNameInput.getText());
-        } catch (PetesPikeException e) {
-            System.out.println(e.getMessage());
+            this.display.newGame(this.fileNameInput.getText());
+        } catch (PetesPikeException ppe){
+            System.out.println(ppe.getMessage());
         }
     }
 }
