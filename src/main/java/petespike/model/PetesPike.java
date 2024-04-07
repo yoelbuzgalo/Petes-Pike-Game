@@ -123,6 +123,11 @@ public class PetesPike {
         return this.filename;
     }
 
+    public char getChar(Position position){
+        System.out.println(board[position.getRow()][position.getCol()] + " ");
+        return board[position.getRow()][position.getCol()];
+    }
+
     public Set<Position> getGoatPositions() {
         return this.goatPositions;
     }

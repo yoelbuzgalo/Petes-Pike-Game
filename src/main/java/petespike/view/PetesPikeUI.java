@@ -171,6 +171,19 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
     }
 
+    public Move getHint(){
+        for(Move move : engine.getPossibleMoves()){
+            if(engine.validMove(move)){
+                return move;
+            }
+        }
+        return null;
+    }
+
+    public Image getImage(Position position){
+        System.out.println(CHARACTER_IMAGES.get(engine.getChar(position)));
+        return CHARACTER_IMAGES.get(engine.getChar(position));
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -193,8 +206,13 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         // Side Box
         VBox sideBox = new VBox();
         GridPane moveButtonsGrid = createMoveButtons();
-        Button getHintButton = createButton("Get Hint", (x) -> System.out.println("Unsupported command"));
+        
+
         HBox hintBox = new HBox();
+        Label goatlabel = new Label("");
+        Label directionlabel = new Label("");
+        Button getHintButton = createButton("Get Hint", new HintEventHandler(goatlabel , directionlabel , this));
+        hintBox.getChildren().addAll(goatlabel , directionlabel);
         // TODO: Add here images into the hint box
 
         sideBox.getChildren().addAll(moveButtonsGrid, getHintButton, hintBox);
