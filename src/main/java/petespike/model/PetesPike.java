@@ -257,11 +257,12 @@ public class PetesPike {
 
                 if(moving == PETE_SYMBOL){
                     petePosition = new Position(newRow, newCol);
-                    notifyObserver(move.getPosition(), petePosition);
+                    
                     //checks if game won
                     if(petePosition.equals(mountainTopPosition)){
                         this.state = GameState.WON;
                     }
+                    notifyObserver(move.getPosition(), petePosition);
                 }
                 else{
                     goatPositions.add(new Position(newRow, newCol));

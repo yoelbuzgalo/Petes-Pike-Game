@@ -157,6 +157,15 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
             this.messagelabel.setText(e.getMessage());
         }
 
+        System.out.println(engine.getState());
+        if(engine.getState() == GameState.WON){
+            this.messagelabel.setText("Game won");
+            System.out.println("changing opacity");
+            for(Button button : this.gridButtons.values()){
+                button.setOpacity(0.5);
+            }
+        }
+
     }
 
     @Override
