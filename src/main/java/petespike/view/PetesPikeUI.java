@@ -184,6 +184,21 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         this.messagelabel.setText(message);
     }
 
+    public void newGame(String fileName) throws PetesPikeException {
+        this.engine = new PetesPike(fileName);
+        System.out.println("Got here");
+        this.puzzleLayout.getChildren().clear();
+        this.gridButtons.clear();
+        for(int i = 0; i < this.engine.getBoard().length; i++){
+            for(int j = 0; j < this.engine.getBoard()[i].length; j++){
+                Button gridElement = createGridElement(this.engine.getBoard()[i][j] , new GridEventHandler(i, j , this));
+                puzzleLayout.add(gridElement, j, i );
+                // store each button in a map with a position key
+                this.gridButtons.put(new Position(i, j), gridElement);
+            }
+        }
+    }
+
     public Image getImage(Position position){
         System.out.println(CHARACTER_IMAGES.get(engine.getChar(position)));
         return CHARACTER_IMAGES.get(engine.getChar(position));
@@ -201,7 +216,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         HBox puzzleInputBox = new HBox();
         Button resetButton = createButton("Reset",(x) -> this.engine.reset());
         TextField fileAddressInput = new TextField();
-        Button newPuzzleButton = createButton("New Puzzle", new NewPuzzleEventHandler(engine, fileAddressInput));
+        Button newPuzzleButton = createButton("New Puzzle", new NewPuzzleEventHandler(fileAddressInput, this));
         puzzleInputBox.getChildren().addAll(resetButton, fileAddressInput, newPuzzleButton);
 
         // Grid Box
