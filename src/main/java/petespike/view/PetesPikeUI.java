@@ -23,6 +23,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     private PetesPike engine;
     private Position clickedPosition;
     private GridPane puzzleLayout;
+    private Label statusLabel;
 
     static {
         CHARACTER_IMAGES.put('T', new Image("file:data/images/mountaintop.png"));
@@ -171,6 +172,11 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
     }
 
+    @Override
+    public void displayMessage(String message) {
+        this.statusLabel.setText(message);
+    }
+
     public Image getImage(Position position){
         System.out.println(CHARACTER_IMAGES.get(engine.getChar(position)));
         return CHARACTER_IMAGES.get(engine.getChar(position));
@@ -210,8 +216,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
         // Bottom Box
         HBox movesBox = new HBox();
-        Label label = new Label("Moves: " + engine.getMoveCount());
-        movesBox.getChildren().addAll(label);
+        this.statusLabel = new Label();
+        Label movesLabel = new Label("Moves: " + engine.getMoveCount());
+        movesBox.getChildren().addAll(this.statusLabel, movesLabel);
 
         BorderPane bp = new BorderPane();
         bp.setTop(puzzleInputBox);
