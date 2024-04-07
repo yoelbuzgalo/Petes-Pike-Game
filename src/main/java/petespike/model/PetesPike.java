@@ -104,6 +104,7 @@ public class PetesPike {
         this.goatPositions.clear();
         this.petePosition = this.peteInitialPosition;
         this.state = GameState.NEW;
+        this.observer.reset();
     }
 
     public int getMoveCount() {

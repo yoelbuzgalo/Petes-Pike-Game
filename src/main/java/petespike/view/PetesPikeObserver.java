@@ -4,5 +4,6 @@ import petespike.model.Position;
 
 public interface PetesPikeObserver {
 
-    public void pieceMoved(Position from , Position to);  
+    public abstract void pieceMoved(Position from , Position to);
+    public abstract void reset();
 }

@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -65,15 +64,18 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
     /**
      * Creates elements in a grid
-     * @param image Pass in an image, it can be null
+     * @param gridCharacter Pass in a grid character
      * @param handler Pass in
      * @return
      */
-    private static Button createGridElement(Image image , EventHandler<ActionEvent> handler){
+    private static Button createGridElement(char gridCharacter , EventHandler<ActionEvent> handler){
         Button button = new Button();
         button.setPrefHeight(100);
         button.setPrefWidth(100);
-        button.setBackground(createElementBackground(image));
+        if (!CHARACTER_IMAGES.containsKey(gridCharacter)){
+            button.setDisable(true);
+        }
+        button.setBackground(createElementBackground(CHARACTER_IMAGES.get(gridCharacter)));
         Border border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1), new Insets(5)));
         button.setBorder(border);
         button.setOnAction(handler);
@@ -91,8 +93,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         puzzleLayout.setBorder(blackBorder);
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board.length; j++){
-                Button gridElement = createGridElement(CHARACTER_IMAGES.get(board[i][j]) , new GridEventHandler(i, j , this));
+                Button gridElement = createGridElement(board[i][j] , new GridEventHandler(i, j , this));
                 puzzleLayout.add(gridElement, j, i );
+                // store each button in a map with a position key
                 this.gridButtons.put(new Position(i, j), gridElement);
             }
         }
@@ -138,12 +141,34 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         Button fromElement = this.gridButtons.get(from);
         Button toElement = this.gridButtons.get(to);
         fromElement.setBackground(createElementBackground(null));
+        fromElement.setDisable(true);
         try {
             toElement.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(to))));
+            toElement.setDisable(false);
         } catch (PetesPikeException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public void reset() {
+        for(int i = 0; i < this.engine.getBoard().length; i++){
+            for (int j = 0; j < this.engine.getBoard()[i].length; j++){
+                try {
+                    Position targetPosition = new Position(i, j);
+                    Button target = this.gridButtons.get(targetPosition);
+                    if (!CHARACTER_IMAGES.containsKey(this.engine.getSymbolAt(targetPosition))){
+                        target.setDisable(true);
+                    } else {
+                        target.setDisable(false);
+                    }
+                    target.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(targetPosition))));
+                } catch (PetesPikeException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
 
