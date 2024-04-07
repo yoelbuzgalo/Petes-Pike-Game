@@ -108,15 +108,18 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      * @param direction Pass in the direction of move
      */
     private void handleMoveButtonClick(Direction direction) {
-        try {
-            if(engine.validMove(new Move(this.clickedPosition, direction))){
-            this.engine.makeMove(new Move(this.clickedPosition, direction));
+        if(engine.getState() == GameState.WON){
+            this.messagelabel.setText("Cannot move, game won");
+        }
+        else if(!engine.validMove(new Move(this.clickedPosition, direction))){
+            this.messagelabel.setText("Invalid Move");
+        }
+        else{
+            try {
+                this.engine.makeMove(new Move(this.clickedPosition, direction));
+            } catch (PetesPikeException e){
+                this.messagelabel.setText(e.getMessage());
             }
-            else{
-                this.messagelabel.setText("Invalid move");
-            }
-        } catch (PetesPikeException e){
-            this.messagelabel.setText(e.getMessage());
         }
     }
 
@@ -181,6 +184,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                         target.setDisable(false);
                     }
                     target.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(targetPosition))));
+                    target.setOpacity(1);
                 } catch (PetesPikeException e) {
                     this.messagelabel.setText(e.getMessage());
                 }

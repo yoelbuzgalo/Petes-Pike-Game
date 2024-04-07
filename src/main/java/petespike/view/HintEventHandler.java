@@ -9,6 +9,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import petespike.model.GameState;
 import petespike.model.Move;
 import petespike.model.PetesPike;
 
@@ -27,9 +28,11 @@ public class HintEventHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-        Move hinted = this.engine.getHint();
-        System.out.println(hinted);
-        this.goatlabel.setText(hinted.toString());
+            if(engine.getState() != GameState.WON){
+            Move hinted = this.engine.getHint();
+            System.out.println(hinted);
+            this.goatlabel.setText(hinted.toString());
+        }
 //        System.out.println(goatlabel.getBackground());
 //        directionlabel.setText(hinted.getDirection().name());
 //        goatlabel.setBackground(new Background(new BackgroundImage( UI.getImage(hinted.getPosition()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER , BackgroundSize.DEFAULT)));
