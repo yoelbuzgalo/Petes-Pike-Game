@@ -109,7 +109,12 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      */
     private void handleMoveButtonClick(Direction direction) {
         try {
+            if(engine.validMove(new Move(this.clickedPosition, direction))){
             this.engine.makeMove(new Move(this.clickedPosition, direction));
+            }
+            else{
+                this.messagelabel.setText("Invalid move");
+            }
         } catch (PetesPikeException e){
             this.messagelabel.setText(e.getMessage());
         }
@@ -139,6 +144,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     @Override
     public void pieceMoved(Position from, Position to) {
         System.out.println("Moving piece from: " + from + " ,to: " + to);
+        this.messagelabel.setText("Piece moved from: " + from + " ,to: " + to);
         this.movecount.setText("Moves: " + engine.getMoveCount());
         Button fromElement = this.gridButtons.get(from);
         Button toElement = this.gridButtons.get(to);
@@ -148,7 +154,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
             toElement.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(to))));
             toElement.setDisable(false);
         } catch (PetesPikeException e) {
-            throw new RuntimeException(e);
+            this.messagelabel.setText(e.getMessage());
         }
 
     }
@@ -167,7 +173,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                     }
                     target.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(targetPosition))));
                 } catch (PetesPikeException e) {
-                    throw new RuntimeException(e);
+                    this.messagelabel.setText(e.getMessage());
                 }
             }
         }
