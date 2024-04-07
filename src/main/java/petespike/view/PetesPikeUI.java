@@ -185,6 +185,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     }
 
     public void newGame(String fileName) throws PetesPikeException {
+        this.clickedPosition = null;
         this.engine = new PetesPike(fileName);
         System.out.println("Got here");
         this.puzzleLayout.getChildren().clear();
