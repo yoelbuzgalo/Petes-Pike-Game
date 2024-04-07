@@ -154,7 +154,7 @@ public class PetesPikeCLI {
                 } else if (parsedInput[0].equals("hint")){
 
                     checkIfActiveGame(game);
-                    Move hintedMove = getHint(game);
+                    Move hintedMove = game.getHint();
                     if (hintedMove != null) {
                         System.out.println("Try: " + hintedMove);
                     } else {
@@ -172,17 +172,6 @@ public class PetesPikeCLI {
             }
             
         }
-    }
-
-    private static Move getHint(PetesPike game){
-        //PetesPike copy = game;
-        //List<Move> moves = game.getPossibleMoves();
-        for(Move move : game.getPossibleMoves()){
-            if(game.validMove(move)){
-                return move;
-            }
-        }
-        return null;
     }
 
     /**

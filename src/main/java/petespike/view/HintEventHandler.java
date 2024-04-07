@@ -10,15 +10,16 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import petespike.model.Move;
+import petespike.model.PetesPike;
 
 public class HintEventHandler implements EventHandler<ActionEvent> {
-    private Label goatlabel;
-    private Label directionlabel;
-    private PetesPikeUI UI;
+    private final Label goatlabel;
+    private final Label directionlabel;
+    private final PetesPike engine;
 
 
-    public HintEventHandler(Label goatlabel , Label directionLabel , PetesPikeUI UI){
-        this.UI = UI;
+    public HintEventHandler(Label goatlabel , Label directionLabel , PetesPike engine){
+        this.engine = engine;
         this.directionlabel = directionLabel;
         this.goatlabel = goatlabel;
 
@@ -26,12 +27,12 @@ public class HintEventHandler implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-        Move hinted = UI.getHint();
+        Move hinted = this.engine.getHint();
         System.out.println(hinted);
-        System.out.println(goatlabel.getBackground());
-        directionlabel.setText(hinted.getDirection().name());
-        goatlabel.setBackground(new Background(new BackgroundImage( UI.getImage(hinted.getPosition()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER , BackgroundSize.DEFAULT)));
-        System.out.println(goatlabel.getBackground());
+//        System.out.println(goatlabel.getBackground());
+//        directionlabel.setText(hinted.getDirection().name());
+//        goatlabel.setBackground(new Background(new BackgroundImage( UI.getImage(hinted.getPosition()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER , BackgroundSize.DEFAULT)));
+//        System.out.println(goatlabel.getBackground());
 
     }
     

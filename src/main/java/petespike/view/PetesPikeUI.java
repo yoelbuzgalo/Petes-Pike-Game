@@ -171,15 +171,6 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
     }
 
-    public Move getHint(){
-        for(Move move : engine.getPossibleMoves()){
-            if(engine.validMove(move)){
-                return move;
-            }
-        }
-        return null;
-    }
-
     public Image getImage(Position position){
         System.out.println(CHARACTER_IMAGES.get(engine.getChar(position)));
         return CHARACTER_IMAGES.get(engine.getChar(position));
@@ -211,7 +202,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         HBox hintBox = new HBox();
         Label goatlabel = new Label("");
         Label directionlabel = new Label("");
-        Button getHintButton = createButton("Get Hint", new HintEventHandler(goatlabel , directionlabel , this));
+        Button getHintButton = createButton("Get Hint", new HintEventHandler(goatlabel , directionlabel, engine));
         hintBox.getChildren().addAll(goatlabel , directionlabel);
         // TODO: Add here images into the hint box
 

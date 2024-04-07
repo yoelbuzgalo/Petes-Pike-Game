@@ -104,7 +104,9 @@ public class PetesPike {
         this.goatPositions.clear();
         this.petePosition = this.peteInitialPosition;
         this.state = GameState.NEW;
-        this.observer.reset();
+        if (this.observer != null){
+            this.observer.reset();
+        }
     }
 
     public int getMoveCount() {
@@ -174,7 +176,22 @@ public class PetesPike {
     }
 
     private void notifyObserver(Position from , Position to){
-        this.observer.pieceMoved(from, to);
+        if (this.observer != null){
+            this.observer.pieceMoved(from, to);
+        }
+    }
+
+    /**
+     * This returns a possible move based on any current board configuration
+     * @return
+     */
+    public Move getHint(){
+        for(Move move : this.getPossibleMoves()){
+            if(this.validMove(move)){
+                return move;
+            }
+        }
+        return null;
     }
 
     /**
