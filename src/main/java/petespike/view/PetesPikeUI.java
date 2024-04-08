@@ -111,9 +111,13 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         if(engine.getState() == GameState.WON){
             this.messagelabel.setText("Cannot move, game won");
         }
+        else if(this.clickedPosition == null){
+            messagelabel.setText("Please press piece to move first");
+        }
         else if(!engine.validMove(new Move(this.clickedPosition, direction))){
             this.messagelabel.setText("Invalid Move");
         }
+
         else{
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, direction));
@@ -185,6 +189,8 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                     }
                     target.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(targetPosition))));
                     target.setOpacity(1);
+                    movecount.setText("Moves: 0");
+                    messagelabel.setText("Game reset");
                 } catch (PetesPikeException e) {
                     this.messagelabel.setText(e.getMessage());
                 }
@@ -200,11 +206,12 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     public void newGame(String fileName) throws PetesPikeException {
         this.clickedPosition = null;
         this.engine = new PetesPike(fileName);
-        System.out.println("Got here");
+        this.engine.registerObserver(this);
+        System.out.println(engine.getState());
         this.puzzleLayout.getChildren().clear();
         this.gridButtons.clear();
-        for(int i = 0; i < this.engine.getBoard().length; i++){
-            for(int j = 0; j < this.engine.getBoard()[i].length; j++){
+        for(int i = 0; i < this.engine.getRows(); i++){
+            for(int j = 0; j < this.engine.getCols(); j++){
                 Button gridElement = createGridElement(this.engine.getBoard()[i][j] , new GridEventHandler(i, j , this));
                 puzzleLayout.add(gridElement, j, i );
                 // store each button in a map with a position key

@@ -33,6 +33,9 @@ public class HintEventHandler implements EventHandler<ActionEvent> {
             System.out.println(hinted);
             this.goatlabel.setText(hinted.toString());
         }
+        else{
+            System.out.println("Cannot hint , game won");
+        }
 //        System.out.println(goatlabel.getBackground());
 //        directionlabel.setText(hinted.getDirection().name());
 //        goatlabel.setBackground(new Background(new BackgroundImage( UI.getImage(hinted.getPosition()), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER , BackgroundSize.DEFAULT)));
