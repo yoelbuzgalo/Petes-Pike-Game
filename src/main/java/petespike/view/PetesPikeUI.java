@@ -23,6 +23,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     private PetesPike engine;
     private Position clickedPosition;
     private GridPane puzzleLayout;
+    private Button hintButton;
+    private Label goatLabel;
+    private Label directionLabel;
     private Label movecount;
     private Label messagelabel;
     static {
@@ -32,11 +35,11 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         CHARACTER_IMAGES.put('1', new Image("file:data/images/orange_goat.png"));
         CHARACTER_IMAGES.put('2', new Image("file:data/images/green_goat.png"));
         CHARACTER_IMAGES.put('3', new Image("file:data/images/yellow_goat.png"));
-        CHARACTER_IMAGES.put('4', new Image("file:data/images/magenta_goat.png"));
-        CHARACTER_IMAGES.put('5', new Image("file:data/images/gold_goat.png"));
+        CHARACTER_IMAGES.put('4', new Image("file:data/images/red_goat.png"));
+        //CHARACTER_IMAGES.put('5', new Image("file:data/images/gold_goat.png"));
         CHARACTER_IMAGES.put('6', new Image("file:data/images/purple_goat.png"));
-        CHARACTER_IMAGES.put('7', new Image("file:data/images/gray_goat.png"));
-        CHARACTER_IMAGES.put('8', new Image("file:data/images/cyan_goat.png"));
+        //CHARACTER_IMAGES.put('7', new Image("file:data/images/magenta_goat.png"));
+        //CHARACTER_IMAGES.put('8', new Image("file:data/images/cyan_goat.png"));
     }
 
     /**
@@ -183,6 +186,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 }
             }
         }
+        System.out.println(this.engine.getState());
     }
 
     /**
@@ -245,6 +249,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 this.gridButtons.put(new Position(i, j), gridElement);
             }
         }
+        this.hintButton.setOnAction(new HintEventHandler(goatLabel , directionLabel, engine));
+        movecount.setText("Moves: 0");
+        messagelabel.setText("New Game");
     }
 
     public Image getImage(Position position){
@@ -277,8 +284,11 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
         HBox hintBox = new HBox();
         Label goatlabel = new Label("");
+        this.goatLabel = goatlabel;
         Label directionlabel = new Label("");
+        this.directionLabel = directionlabel;
         Button getHintButton = createButton("Get Hint", new HintEventHandler(goatlabel , directionlabel, engine));
+        this.hintButton = getHintButton;
         hintBox.getChildren().addAll(goatlabel , directionlabel);
         // TODO: Add here images into the hint box
 
