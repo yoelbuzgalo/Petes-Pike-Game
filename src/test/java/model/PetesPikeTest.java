@@ -198,5 +198,55 @@ public class PetesPikeTest {
             assert false;
         }
     }
+
+
+    @Test
+    public void testRows(){
+        try{
+            PetesPike game = new PetesPike("data/petes_pike_5_7_4_0.txt");
+
+            assert game.getRows() == 5;
+        }
+        catch(PetesPikeException e){
+            assert false;
+        }
+    }
+
+    @Test
+    public void testCols(){
+        try{
+            PetesPike game = new PetesPike("data/petes_pike_5_7_4_0.txt");
+
+            assert game.getCols() == 7;
+        }
+        catch(PetesPikeException e){
+            assert false;
+        }
+    }
+
+    @Test
+    public void testBoardRows(){
+        try{
+            PetesPike game = new PetesPike("data/petes_pike_5_7_4_0.txt");
+
+            assert game.getBoard().length == 5;
+        }
+        catch(PetesPikeException e){
+            assert false;
+        }
+    }
+
+    @Test
+    public void testBoardCols(){
+        try{
+            PetesPike game = new PetesPike("data/petes_pike_5_7_4_0.txt");
+
+            assert game.getBoard()[0].length == 5;
+        }
+        catch(PetesPikeException e){
+            assert false;
+        }
+    }
+
         
 }

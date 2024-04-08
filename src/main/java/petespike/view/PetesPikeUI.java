@@ -93,7 +93,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         Border blackBorder = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
         puzzleLayout.setBorder(blackBorder);
         for(int i = 0; i < board.length; i++){
-            for(int j = 0; j < board.length; j++){
+            for(int j = 0; j < board[i].length; j++){
                 Button gridElement = createGridElement(board[i][j] , new GridEventHandler(i, j , this));
                 puzzleLayout.add(gridElement, j, i );
                 // store each button in a map with a position key
@@ -207,13 +207,22 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         this.clickedPosition = null;
         this.engine = new PetesPike(fileName);
         this.engine.registerObserver(this);
-        System.out.println(engine.getState());
+        System.out.println(engine.getState() + "rows: " + this.engine.getRows() + "cols: " + this.engine.getCols());
         this.puzzleLayout.getChildren().clear();
         this.gridButtons.clear();
+
+        for(int i = 0 ; i < this.engine.getRows() ; i++){
+            System.out.println(this.engine.getBoard()[i]);
+        }
         for(int i = 0; i < this.engine.getRows(); i++){
+            System.out.println(i);
+            System.out.println(this.engine.getBoard()[i]);
             for(int j = 0; j < this.engine.getCols(); j++){
-                Button gridElement = createGridElement(this.engine.getBoard()[i][j] , new GridEventHandler(i, j , this));
-                puzzleLayout.add(gridElement, j, i );
+                System.out.println(j);
+                
+                Button gridElement = createGridElement(this.engine.getBoard()[i][j] , new GridEventHandler(i , j , this));
+                puzzleLayout.add(gridElement, j , i );
+                System.out.println("Piece added at " + i + " " + j);
                 // store each button in a map with a position key
                 this.gridButtons.put(new Position(i, j), gridElement);
             }

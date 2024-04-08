@@ -91,7 +91,7 @@ public class PetesPike {
     private void copyBoard(){
         // deep copy the initial board to playing board
         for(int i = 0; i < this.initialBoard.length; i++){
-            this.board[i] = Arrays.copyOf(this.initialBoard[i], this.initialBoard.length);
+            this.board[i] = Arrays.copyOf(this.initialBoard[i], this.initialBoard[i].length);
         }
     }
 
@@ -284,5 +284,23 @@ public class PetesPike {
             throw new PetesPikeException("Goat fell off!");
             
         }
+    }
+
+
+    public static void main(String[] args) {
+        try{
+        PetesPike pike = new PetesPike("data/petes_pike_5_7_4_0.txt");
+        System.out.println("rows " + pike.getRows());
+        System.out.println("cols " + pike.getCols());
+
+        for(int i = 0 ; i < pike.getBoard().length ; i++){
+            System.out.println(pike.getBoard()[i]);
+        }
+        }
+        catch(PetesPikeException e){
+            System.out.println(e.getMessage());
+        }
+
+
     }
 }
