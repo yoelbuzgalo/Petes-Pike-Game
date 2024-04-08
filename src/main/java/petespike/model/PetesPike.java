@@ -178,6 +178,7 @@ public class PetesPike {
     private void notifyObserver(Position from , Position to){
         if (this.observer != null){
             this.observer.pieceMoved(from, to);
+            this.observer.updateStatus(this.state);
         }
     }
 
@@ -228,7 +229,8 @@ public class PetesPike {
         if(move.getPosition().getRow() >= this.rows || move.getPosition().getCol() >= this.cols ||
         move.getPosition().getRow() < 0 || move.getPosition().getCol() < 0 ||
         board[move.getPosition().getRow()][move.getPosition().getCol()] == EMPTY_SYMBOL){
-            throw new PetesPikeException("Invalid move");
+            this.state = GameState.NO_MOVES;
+            throw new PetesPikeException(this.state.toString());
         }
 
         //updates counters
@@ -276,13 +278,11 @@ public class PetesPike {
         }
         //throws error based off which piece fell off
         if(moving == PETE_SYMBOL){
-            state = GameState.NO_MOVES;
-            throw new PetesPikeException("Pete fell off!!");
-            
+            this.state = GameState.NO_MOVES;
+            throw new PetesPikeException(this.state.toString());
         }
         else{
-            throw new PetesPikeException("Goat fell off!");
-            
+            throw new PetesPikeException(this.state.toString());
         }
     }
 

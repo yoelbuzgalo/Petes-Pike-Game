@@ -1,7 +1,6 @@
 package petespike.view;
 
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,6 +19,7 @@ import java.util.Map;
 public class PetesPikeUI extends Application implements PetesPikeObserver {
     private static final Map<Character, Image> CHARACTER_IMAGES = new HashMap<>();
     private final Map<Position, Button> gridButtons = new HashMap<>();
+    private boolean gameIsDisabled;
     private PetesPike engine;
     private Position clickedPosition;
     private GridPane puzzleLayout;
@@ -108,17 +108,13 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      * @param direction Pass in the direction of move
      */
     private void handleMoveButtonClick(Direction direction) {
-        if(engine.getState() == GameState.WON){
-            this.messagelabel.setText("Cannot move, game won");
-        }
-        else if(this.clickedPosition == null){
+
+        if(this.clickedPosition == null){
             messagelabel.setText("Please press piece to move first");
         }
         else if(!engine.validMove(new Move(this.clickedPosition, direction))){
-            this.messagelabel.setText("Invalid Move");
-        }
-
-        else{
+            this.messagelabel.setText(GameState.NO_MOVES.toString());
+        } else{
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, direction));
             } catch (PetesPikeException e){
@@ -164,15 +160,6 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
             this.messagelabel.setText(e.getMessage());
         }
 
-        System.out.println(engine.getState());
-        if(engine.getState() == GameState.WON){
-            this.messagelabel.setText("Game won");
-            System.out.println("changing opacity");
-            for(Button button : this.gridButtons.values()){
-                button.setOpacity(0.5);
-            }
-        }
-
     }
 
     @Override
@@ -188,7 +175,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                         target.setDisable(false);
                     }
                     target.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(targetPosition))));
-                    target.setOpacity(1);
+                    this.setOpacityAndDisableControls(false);
                     movecount.setText("Moves: 0");
                     messagelabel.setText("Game reset");
                 } catch (PetesPikeException e) {
@@ -198,9 +185,40 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
     }
 
+    /**
+     * Helper function that will disable/enable a user's access to move controls
+     * this will also change the grid's opacity
+     */
+    private void setOpacityAndDisableControls(boolean enable){
+        if (enable && !gameIsDisabled) {
+            for(Button button : this.gridButtons.values()){
+                button.setOpacity(0.5);
+                button.setDisable(true);
+            }
+            this.gameIsDisabled = true;
+        } else if (gameIsDisabled) {
+            for(Button button : this.gridButtons.values()){
+                button.setOpacity(1);
+                button.setDisable(false);
+            }
+            this.gameIsDisabled = false;
+        }
+    }
+
     @Override
     public void displayMessage(String message) {
         this.messagelabel.setText(message);
+    }
+
+    @Override
+    public void updateStatus(GameState status) {
+        if (status == GameState.WON){
+            this.setOpacityAndDisableControls(true);
+            this.messagelabel.setText(status.toString());
+        } else {
+            this.setOpacityAndDisableControls(false);
+            this.messagelabel.setText(status.toString());
+        }
     }
 
     public void newGame(String fileName) throws PetesPikeException {
