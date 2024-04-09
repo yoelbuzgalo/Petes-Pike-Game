@@ -75,7 +75,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      * @param node
      * @param direction
      */
-    private static void setRotateDirection(Node node, Direction direction){
+    private static void rotateArrowDirection(Node node, Direction direction){
         if (direction == Direction.UP){
             node.setRotate(90);
         } else if (direction == Direction.DOWN) {
@@ -98,7 +98,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         button.setRotate(90);
         button.setPrefWidth(45);
         button.setPrefHeight(45);
-        setRotateDirection(button, direction);
+        rotateArrowDirection(button, direction);
         button.setBackground(new Background(new BackgroundImage(ARROW_IMAGE, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, true, false))));
         button.setOnAction(eventHandler);
         return button;
@@ -195,41 +195,30 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         this.clickedPosition = clickedPosition;
     }
 
+    private void setOpacityAndDisable(double opacity, boolean disable){
+        for(Button button : this.gridButtons.values()){
+            button.setOpacity(opacity);
+            button.setDisable(disable);
+        }
+        for (Node node : this.moveButtonsGrid.getChildren()){
+            if (node instanceof Button){
+                Button castedNode = (Button) node;
+                castedNode.setDisable(disable);
+            }
+        }
+        this.hintButton.setDisable(disable);
+        this.gameIsDisabled = disable;
+    }
+
     /**
      * Helper function that will disable/enable a user's access to move controls
      * this will also change the grid's opacity
      */
     private void setOpacityAndDisableControls(boolean enable){
         if (enable && !gameIsDisabled) {
-            for(Button button : this.gridButtons.values()){
-                button.setOpacity(0.5);
-                if (button != this.mountainTopButton){
-                    button.setDisable(true);
-                }
-            }
-            for (Node node : this.moveButtonsGrid.getChildren()){
-                if (node instanceof Button){
-                    Button castedNode = (Button) node;
-                    castedNode.setDisable(true);
-                }
-            }
-            this.hintButton.setDisable(true);
-            this.gameIsDisabled = true;
+            setOpacityAndDisable(0.5, true);
         } else if (!enable && gameIsDisabled) {
-            for(Button button : this.gridButtons.values()){
-                button.setOpacity(1);
-                if (button != this.mountainTopButton){
-                    button.setDisable(false);
-                }
-            }
-            for (Node node : this.moveButtonsGrid.getChildren()){
-                if (node instanceof Button){
-                    Button castedNode = (Button) node;
-                    castedNode.setDisable(false);
-                }
-            }
-            this.hintButton.setDisable(false);
-            this.gameIsDisabled = false;
+            setOpacityAndDisable(1, false);
         }
     }
 
@@ -267,7 +256,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 try {
                     Position targetPosition = new Position(i, j);
                     Button target = this.gridButtons.get(targetPosition);
-                    target.setDisable(!CHARACTER_IMAGES.containsKey(this.engine.getSymbolAt(targetPosition)));
+                    if (target != this.mountainTopButton){
+                        target.setDisable(!CHARACTER_IMAGES.containsKey(this.engine.getSymbolAt(targetPosition)));
+                    }
                     target.setBackground(createBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(targetPosition))));
                     moveCount.setText("Moves: " + this.engine.getMoveCount());
                 } catch (PetesPikeException e) {
@@ -300,8 +291,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
             char piece = this.engine.getSymbolAt(move.getPosition());
             this.hintPieceImage.setImage(CHARACTER_IMAGES.get(piece));
             this.hintDirectionImage.setImage(ARROW_IMAGE);
-            setRotateDirection(this.hintDirectionImage, move.getDirection());
-
+            rotateArrowDirection(this.hintDirectionImage, move.getDirection());
         } catch (PetesPikeException ppe){
             this.messageLabel.setText(ppe.getMessage());
         }
@@ -350,22 +340,22 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 this.setMessage(e.getMessage());
             }
         });
-        hintBox.getChildren().addAll(hintPieceImage, this.hintDirectionImage);
+        hintBox.getChildren().addAll(this.hintPieceImage, this.hintDirectionImage);
 
         sideBox.getChildren().addAll(moveButtonsGrid, this.hintButton, hintBox);
 
         // Bottom Box
-        BorderPane messagepane = new BorderPane();
+        BorderPane messagePane = new BorderPane();
         messageLabel = new Label("New Game");
         this.moveCount = new Label("Moves: " + engine.getMoveCount());
-        messagepane.setRight(moveCount);
-        messagepane.setLeft(messageLabel);
+        messagePane.setRight(moveCount);
+        messagePane.setLeft(messageLabel);
 
         BorderPane bp = new BorderPane();
         bp.setTop(puzzleInputBox);
         bp.setCenter(puzzleLayout);
         bp.setRight(sideBox);
-        bp.setBottom(messagepane);
+        bp.setBottom(messagePane);
         Scene scene = new Scene(bp);
         stage.setScene(scene);
         stage.setResizable(false);
