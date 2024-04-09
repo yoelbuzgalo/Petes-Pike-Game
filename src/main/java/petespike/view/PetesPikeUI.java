@@ -296,7 +296,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
         // Bottom Box
         BorderPane messagepane = new BorderPane();
-        messagelabel = new Label("Display message here");
+        messagelabel = new Label("New Game");
         this.movecount = new Label("Moves: " + engine.getMoveCount());
         messagepane.setRight(movecount);
         messagepane.setLeft(messagelabel);
