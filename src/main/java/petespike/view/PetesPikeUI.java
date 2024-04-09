@@ -121,20 +121,15 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     }
 
     /**
-     * Creates a puzzle layout given a board configuration
-     * @param board Pass in the board configuration
-     * @return Returns a grid layout of the puzzle
+     * Helper function to load the grid in
      */
-    private GridPane createPuzzleLayout(char[][] board){
-        GridPane puzzleLayout = new GridPane();
-        Border blackBorder = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
-        puzzleLayout.setBorder(blackBorder);
-        for(int i = 0; i < board.length; i++){
-            for(int j = 0; j < board[i].length; j++){
-                Button gridElement = createGridButtons(board[i][j] , new GridEventHandler(i, j , this));
-                puzzleLayout.add(gridElement, j, i );
+    public void loadGridFromEngine() {
+        for (int i = 0; i < this.engine.getRows(); i++) {
+            for (int j = 0; j < this.engine.getCols(); j++) {
+                Button gridElement = createGridButtons(this.engine.getBoard()[i][j], new GridEventHandler(i, j, this));
+                this.puzzleLayout.add(gridElement, j, i);
                 Position key = new Position(i, j);
-                if (key.equals(engine.getMountainTopPosition())){
+                if (key.equals(engine.getMountainTopPosition())) {
                     this.mountainTopButton = gridElement;
                     this.mountainTopButton.setDisable(true);
                 }
@@ -142,7 +137,16 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 this.gridButtons.put(new Position(i, j), gridElement);
             }
         }
-        return puzzleLayout;
+    }
+
+    /**
+     * Creates a default design of grid
+     */
+    private static GridPane factoryGrid(){
+        GridPane gridLayout = new GridPane();
+        Border blackBorder = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
+        gridLayout.setBorder(blackBorder);
+        return gridLayout;
     }
 
     /**
@@ -229,19 +233,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         this.engine.registerObserver(this);
         this.puzzleLayout.getChildren().clear();
         this.gridButtons.clear();
-        for(int i = 0; i < this.engine.getRows(); i++){
-            for(int j = 0; j < this.engine.getCols(); j++){
-                Button gridElement = createGridButtons(this.engine.getBoard()[i][j] , new GridEventHandler(i, j , this));
-                puzzleLayout.add(gridElement, j, i );
-                Position key = new Position(i, j);
-                if (key.equals(engine.getMountainTopPosition())){
-                    this.mountainTopButton = gridElement;
-                    this.mountainTopButton.setDisable(true);
-                }
-                // store each button in a map with a position key
-                this.gridButtons.put(new Position(i, j), gridElement);
-            }
-        }
+        this.loadGridFromEngine();
         this.moveCount.setText("Moves: " + this.engine.getMoveCount());
     }
 
@@ -330,7 +322,8 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         puzzleInputBox.getChildren().addAll(resetButton, fileAddressInput, newPuzzleButton);
 
         // Grid Box
-        this.puzzleLayout = createPuzzleLayout(engine.getBoard());
+        this.puzzleLayout = factoryGrid();
+        this.loadGridFromEngine();
 
         // Side Box
         VBox sideBox = new VBox();
