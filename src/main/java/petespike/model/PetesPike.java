@@ -226,11 +226,11 @@ public class PetesPike {
      */
     public void makeMove(Move move) throws PetesPikeException{
         //checks if move is possible
-        if(move.getPosition().getRow() >= this.rows || move.getPosition().getCol() >= this.cols ||
-        move.getPosition().getRow() < 0 || move.getPosition().getCol() < 0 ||
-        board[move.getPosition().getRow()][move.getPosition().getCol()] == EMPTY_SYMBOL){
-            this.state = GameState.NO_MOVES;
-            throw new PetesPikeException(this.state.toString());
+        if(!validMove(move)){
+            throw new PetesPikeException("Move not valid");
+        }
+        if(this.state == GameState.WON){
+            throw new PetesPikeException("game already won");
         }
 
         //updates counters
@@ -278,7 +278,6 @@ public class PetesPike {
         }
         //throws error based off which piece fell off
         if(moving == PETE_SYMBOL){
-            this.state = GameState.NO_MOVES;
             throw new PetesPikeException(this.state.toString());
         }
         else{
