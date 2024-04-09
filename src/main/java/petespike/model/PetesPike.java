@@ -107,6 +107,7 @@ public class PetesPike {
         this.state = GameState.NEW;
         if (this.observer != null){
             this.observer.reset();
+            this.observer.updateStatus(this.state);
         }
     }
 
@@ -126,11 +127,6 @@ public class PetesPike {
         return this.filename;
     }
 
-    public char getChar(Position position){
-        System.out.println(board[position.getRow()][position.getCol()] + " ");
-        return board[position.getRow()][position.getCol()];
-    }
-
     public Set<Position> getGoatPositions() {
         return this.goatPositions;
     }
@@ -140,7 +136,7 @@ public class PetesPike {
     }
 
     //checks if valid position and returns char
-    public char getSymbolAt(Position position)throws PetesPikeException{
+    public char getSymbolAt(Position position) throws PetesPikeException{
         if(position.getCol() >= this.cols || position.getRow() >= this.rows){
             throw new PetesPikeException("Position out of range");
         }
@@ -187,13 +183,16 @@ public class PetesPike {
      * This returns a possible move based on any current board configuration
      * @return
      */
-    public Move getHint(){
+    public Move getHint() throws PetesPikeException {
         for(Move move : this.getPossibleMoves()){
             if(this.validMove(move)){
+                if (this.observer != null){
+                    this.observer.displayHint(move);
+                }
                 return move;
             }
         }
-        return null;
+        throw new PetesPikeException("There are no possible moves!");
     }
 
     /**

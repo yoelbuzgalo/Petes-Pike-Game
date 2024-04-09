@@ -26,10 +26,11 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     private GridPane puzzleLayout;
     private GridPane moveButtonsGrid;
     private Button hintButton;
-    private Label goatLabel;
+    private Label pieceLabel;
     private Label directionLabel;
     private Label moveCount;
-    private Label messagelabel;
+    private Label messageLabel;
+
     static {
         CHARACTER_IMAGES.put('T', new Image("file:data/images/mountaintop.png"));
         CHARACTER_IMAGES.put('P', new Image("file:data/images/pete.png"));
@@ -50,7 +51,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      * @param eventHandler
      * @return
      */
-    private static Button createButton(String text, EventHandler<ActionEvent> eventHandler){
+    private static Button factoryButton(String text, EventHandler<ActionEvent> eventHandler){
         Button button = new Button(text);
         button.setOnAction(eventHandler);
         return button;
@@ -61,7 +62,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      * @param image
      * @return
      */
-    private static Background createElementBackground(Image image){
+    private static Background createBackground(Image image){
         if (image == null){
             return new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0)));
         }
@@ -74,14 +75,14 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      * @param handler Pass in
      * @return
      */
-    private static Button createGridElement(char gridCharacter , EventHandler<ActionEvent> handler){
+    private static Button createGridButtons(char gridCharacter , EventHandler<ActionEvent> handler){
         Button button = new Button();
         button.setPrefHeight(100);
         button.setPrefWidth(100);
         if (!CHARACTER_IMAGES.containsKey(gridCharacter) || gridCharacter == 'T'){
             button.setDisable(true);
         }
-        button.setBackground(createElementBackground(CHARACTER_IMAGES.get(gridCharacter)));
+        button.setBackground(createBackground(CHARACTER_IMAGES.get(gridCharacter)));
         Border border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1), new Insets(5)));
         button.setBorder(border);
         button.setOnAction(handler);
@@ -99,7 +100,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         puzzleLayout.setBorder(blackBorder);
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board[i].length; j++){
-                Button gridElement = createGridElement(board[i][j] , new GridEventHandler(i, j , this));
+                Button gridElement = createGridButtons(board[i][j] , new GridEventHandler(i, j , this));
                 puzzleLayout.add(gridElement, j, i );
                 // store each button in a map with a position key
                 this.gridButtons.put(new Position(i, j), gridElement);
@@ -114,15 +115,15 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      */
     private void handleMoveButtonClick(Direction direction) {
         if(this.clickedPosition == null){
-            messagelabel.setText("Please press piece to move first");
+            messageLabel.setText("Please press piece to move first");
         }
         else if(!engine.validMove(new Move(this.clickedPosition, direction))){
-            this.messagelabel.setText(GameState.NO_MOVES.toString());
+            this.messageLabel.setText(GameState.NO_MOVES.toString());
         } else{
             try {
                 this.engine.makeMove(new Move(this.clickedPosition, direction));
             } catch (PetesPikeException e){
-                this.messagelabel.setText(e.getMessage());
+                this.messageLabel.setText(e.getMessage());
             }
         }
     }
@@ -133,10 +134,10 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      */
     private GridPane createMoveButtons(){
         this.moveButtonsGrid = new GridPane();
-        moveButtonsGrid.add(createButton("Up", (x) -> handleMoveButtonClick(Direction.UP)), 1, 0);
-        moveButtonsGrid.add(createButton("Left", (x) -> handleMoveButtonClick(Direction.LEFT)), 0, 1);
-        moveButtonsGrid.add(createButton("Right", (x) -> handleMoveButtonClick(Direction.RIGHT)),2, 1);
-        moveButtonsGrid.add(createButton("Down", (x) -> handleMoveButtonClick(Direction.DOWN)), 1, 2);
+        moveButtonsGrid.add(factoryButton("Up", (x) -> handleMoveButtonClick(Direction.UP)), 1, 0);
+        moveButtonsGrid.add(factoryButton("Left", (x) -> handleMoveButtonClick(Direction.LEFT)), 0, 1);
+        moveButtonsGrid.add(factoryButton("Right", (x) -> handleMoveButtonClick(Direction.RIGHT)),2, 1);
+        moveButtonsGrid.add(factoryButton("Down", (x) -> handleMoveButtonClick(Direction.DOWN)), 1, 2);
         return moveButtonsGrid;
     }
 
@@ -146,48 +147,6 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      */
     public void setClickedPosition(Position clickedPosition) {
         this.clickedPosition = clickedPosition;
-    }
-
-    @Override
-    public void pieceMoved(Position from, Position to) {
-        System.out.println("Moving piece from: " + from + " ,to: " + to);
-        this.messagelabel.setText("Piece moved from: " + from + " ,to: " + to);
-        this.moveCount.setText("Moves: " + engine.getMoveCount());
-        Button fromElement = this.gridButtons.get(from);
-        Button toElement = this.gridButtons.get(to);
-        fromElement.setBackground(createElementBackground(null));
-        fromElement.setDisable(true);
-        try {
-            toElement.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(to))));
-            toElement.setDisable(false);
-        } catch (PetesPikeException e) {
-            this.messagelabel.setText(e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void reset() {
-        for(int i = 0; i < this.engine.getBoard().length; i++){
-            for (int j = 0; j < this.engine.getBoard()[i].length; j++){
-                try {
-                    Position targetPosition = new Position(i, j);
-                    Button target = this.gridButtons.get(targetPosition);
-                    if (!CHARACTER_IMAGES.containsKey(this.engine.getSymbolAt(targetPosition))){
-                        target.setDisable(true);
-                    } else {
-                        target.setDisable(false);
-                    }
-                    target.setBackground(createElementBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(targetPosition))));
-                    this.setOpacityAndDisableControls(false);
-                    moveCount.setText("Moves: 0");
-                    messagelabel.setText("Game reset");
-                } catch (PetesPikeException e) {
-                    this.messagelabel.setText(e.getMessage());
-                }
-            }
-        }
-        System.out.println(this.engine.getState());
     }
 
     /**
@@ -220,53 +179,87 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
     }
 
+    public void newGame(String fileName) throws PetesPikeException {
+        this.clickedPosition = null;
+        this.engine = new PetesPike(fileName);
+        this.engine.registerObserver(this);
+        this.puzzleLayout.getChildren().clear();
+        this.gridButtons.clear();
+        for(int i = 0; i < this.engine.getRows(); i++){
+            for(int j = 0; j < this.engine.getCols(); j++){
+                Button gridElement = createGridButtons(this.engine.getBoard()[i][j] , new GridEventHandler(i , j , this));
+                puzzleLayout.add(gridElement, j , i );
+                // store each button in a map with a position key
+                this.gridButtons.put(new Position(i, j), gridElement);
+            }
+        }
+        this.moveCount.setText("Moves: " + this.engine.getMoveCount());
+    }
+
     @Override
-    public void displayMessage(String message) {
-        this.messagelabel.setText(message);
+    public void pieceMoved(Position from, Position to) {
+        this.moveCount.setText("Moves: " + engine.getMoveCount());
+        Button fromElement = this.gridButtons.get(from);
+        Button toElement = this.gridButtons.get(to);
+        fromElement.setBackground(createBackground(null));
+        fromElement.setDisable(true);
+        try {
+            toElement.setBackground(createBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(to))));
+            toElement.setDisable(false);
+        } catch (PetesPikeException e) {
+            this.messageLabel.setText(e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void reset() {
+        for(int i = 0; i < this.engine.getBoard().length; i++){
+            for (int j = 0; j < this.engine.getBoard()[i].length; j++){
+                try {
+                    Position targetPosition = new Position(i, j);
+                    Button target = this.gridButtons.get(targetPosition);
+                    target.setDisable(!CHARACTER_IMAGES.containsKey(this.engine.getSymbolAt(targetPosition)));
+                    target.setBackground(createBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(targetPosition))));
+                    moveCount.setText("Moves: " + this.engine.getMoveCount());
+                } catch (PetesPikeException e) {
+                    this.messageLabel.setText(e.getMessage());
+                }
+            }
+        }
+        this.setOpacityAndDisableControls(false);
     }
 
     @Override
     public void updateStatus(GameState status) {
         if (status == GameState.WON){
             this.setOpacityAndDisableControls(true);
-            this.messagelabel.setText(status.toString());
+            this.setMessage(status.toString());
         } else {
             this.setOpacityAndDisableControls(false);
-            this.messagelabel.setText(status.toString());
+            this.setMessage(status.toString());
         }
     }
 
-    public void newGame(String fileName) throws PetesPikeException {
-        this.clickedPosition = null;
-        this.engine = new PetesPike(fileName);
-        this.engine.registerObserver(this);
-        System.out.println(engine.getState() + "rows: " + this.engine.getRows() + "cols: " + this.engine.getCols());
-        this.puzzleLayout.getChildren().clear();
-        this.gridButtons.clear();
-
-        for(int i = 0 ; i < this.engine.getRows() ; i++){
-            System.out.println(this.engine.getBoard()[i]);
+    @Override
+    public void displayHint(Move move){
+        if (move == null){
+            this.pieceLabel.setText("");
+            this.directionLabel.setText("");
+            return;
         }
-        for(int i = 0; i < this.engine.getRows(); i++){
-            System.out.println(i);
-            System.out.println(this.engine.getBoard()[i]);
-            for(int j = 0; j < this.engine.getCols(); j++){
-                System.out.println(j);
-                Button gridElement = createGridElement(this.engine.getBoard()[i][j] , new GridEventHandler(i , j , this));
-                puzzleLayout.add(gridElement, j , i );
-                System.out.println("Piece added at " + i + " " + j);
-                // store each button in a map with a position key
-                this.gridButtons.put(new Position(i, j), gridElement);
-            }
+        try {
+            char piece = this.engine.getSymbolAt(move.getPosition());
+            this.pieceLabel.setText(""+piece);
+            this.directionLabel.setText(move.getDirection().toString());
+        } catch (PetesPikeException ppe){
+            this.messageLabel.setText(ppe.getMessage());
         }
-        this.hintButton.setOnAction(new HintEventHandler(goatLabel , directionLabel, engine));
-        moveCount.setText("Moves: 0");
-        messagelabel.setText("New Game");
     }
 
-    public Image getImage(Position position){
-        System.out.println(CHARACTER_IMAGES.get(engine.getChar(position)));
-        return CHARACTER_IMAGES.get(engine.getChar(position));
+    @Override
+    public void setMessage(String message) {
+        this.messageLabel.setText(message);
     }
 
     @Override
@@ -279,9 +272,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
         // Top Part of the UI (Reset, File Address and New Puzzle)
         HBox puzzleInputBox = new HBox();
-        Button resetButton = createButton("Reset",(x) -> this.engine.reset());
+        Button resetButton = factoryButton("Reset",(x) -> this.engine.reset());
         TextField fileAddressInput = new TextField();
-        Button newPuzzleButton = createButton("New Puzzle", new NewPuzzleEventHandler(fileAddressInput, this));
+        Button newPuzzleButton = factoryButton("New Puzzle", new NewPuzzleEventHandler(fileAddressInput, this));
         puzzleInputBox.getChildren().addAll(resetButton, fileAddressInput, newPuzzleButton);
 
         // Grid Box
@@ -290,25 +283,29 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         // Side Box
         VBox sideBox = new VBox();
         GridPane moveButtonsGrid = createMoveButtons();
-        
+
 
         HBox hintBox = new HBox();
-        Label goatlabel = new Label("");
-        this.goatLabel = goatlabel;
-        Label directionlabel = new Label("");
-        this.directionLabel = directionlabel;
-        this.hintButton = createButton("Get Hint", new HintEventHandler(goatlabel , directionlabel, engine));
-        hintBox.getChildren().addAll(goatlabel , directionlabel);
+        this.pieceLabel = new Label("");
+        this.directionLabel = new Label("");
+        this.hintButton = factoryButton("Get Hint", (x) -> {
+            try {
+                this.engine.getHint();
+            } catch (PetesPikeException e) {
+                this.setMessage(e.getMessage());
+            }
+        });
+        hintBox.getChildren().addAll(pieceLabel, this.directionLabel);
         // TODO: Add here images into the hint box
 
         sideBox.getChildren().addAll(moveButtonsGrid, this.hintButton, hintBox);
 
         // Bottom Box
         BorderPane messagepane = new BorderPane();
-        messagelabel = new Label("New Game");
+        messageLabel = new Label("New Game");
         this.moveCount = new Label("Moves: " + engine.getMoveCount());
         messagepane.setRight(moveCount);
-        messagepane.setLeft(messagelabel);
+        messagepane.setLeft(messageLabel);
 
         BorderPane bp = new BorderPane();
         bp.setTop(puzzleInputBox);
