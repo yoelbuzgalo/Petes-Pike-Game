@@ -7,7 +7,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -20,9 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PetesPikeUI extends Application implements PetesPikeObserver {
-    private static final String ARROW_IMAGE = "file:data/images/arrow.png";
+    private static final Image ARROW_IMAGE = new Image("file:data/images/arrow.png");
     private static final Map<Character, Image> CHARACTER_IMAGES = new HashMap<>();
     private final Map<Position, Button> gridButtons = new HashMap<>();
+    private Button mountainTopButton;
     private boolean gameIsDisabled;
     private PetesPike engine;
     private Position clickedPosition;
@@ -83,7 +83,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         button.setPrefWidth(45);
         button.setPrefHeight(45);
         setRotateDirection(button, direction);
-        button.setBackground(new Background(new BackgroundImage(new Image(ARROW_IMAGE), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, true, false))));
+        button.setBackground(new Background(new BackgroundImage(ARROW_IMAGE, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, true, false))));
         button.setOnAction(eventHandler);
         return button;
     };
@@ -133,6 +133,11 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
             for(int j = 0; j < board[i].length; j++){
                 Button gridElement = createGridButtons(board[i][j] , new GridEventHandler(i, j , this));
                 puzzleLayout.add(gridElement, j, i );
+                Position key = new Position(i, j);
+                if (key.equals(engine.getMountainTopPosition())){
+                    this.mountainTopButton = gridElement;
+                    this.mountainTopButton.setDisable(true);
+                }
                 // store each button in a map with a position key
                 this.gridButtons.put(new Position(i, j), gridElement);
             }
@@ -188,22 +193,30 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         if (enable && !gameIsDisabled) {
             for(Button button : this.gridButtons.values()){
                 button.setOpacity(0.5);
-                button.setDisable(true);
+                if (button != this.mountainTopButton){
+                    button.setDisable(true);
+                }
             }
             for (Node node : this.moveButtonsGrid.getChildren()){
-                Button castedNode = (Button) node;
-                castedNode.setDisable(true);
+                if (node instanceof Button){
+                    Button castedNode = (Button) node;
+                    castedNode.setDisable(true);
+                }
             }
             this.hintButton.setDisable(true);
             this.gameIsDisabled = true;
         } else if (!enable && gameIsDisabled) {
             for(Button button : this.gridButtons.values()){
                 button.setOpacity(1);
-                button.setDisable(false);
+                if (button != this.mountainTopButton){
+                    button.setDisable(false);
+                }
             }
             for (Node node : this.moveButtonsGrid.getChildren()){
-                Button castedNode = (Button) node;
-                castedNode.setDisable(false);
+                if (node instanceof Button){
+                    Button castedNode = (Button) node;
+                    castedNode.setDisable(false);
+                }
             }
             this.hintButton.setDisable(false);
             this.gameIsDisabled = false;
@@ -218,8 +231,13 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         this.gridButtons.clear();
         for(int i = 0; i < this.engine.getRows(); i++){
             for(int j = 0; j < this.engine.getCols(); j++){
-                Button gridElement = createGridButtons(this.engine.getBoard()[i][j] , new GridEventHandler(i , j , this));
-                puzzleLayout.add(gridElement, j , i );
+                Button gridElement = createGridButtons(this.engine.getBoard()[i][j] , new GridEventHandler(i, j , this));
+                puzzleLayout.add(gridElement, j, i );
+                Position key = new Position(i, j);
+                if (key.equals(engine.getMountainTopPosition())){
+                    this.mountainTopButton = gridElement;
+                    this.mountainTopButton.setDisable(true);
+                }
                 // store each button in a map with a position key
                 this.gridButtons.put(new Position(i, j), gridElement);
             }
@@ -240,7 +258,8 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         } catch (PetesPikeException e) {
             this.messageLabel.setText(e.getMessage());
         }
-
+        // TODO: Fix so that the background of mountaintop doesnt go away, we need to make mountaintop a stackpane
+        // TODO: Another bug is that a goat could be stuck on mountaintop and not move since mountaintop button is disabled
     }
 
     @Override
@@ -282,7 +301,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         try {
             char piece = this.engine.getSymbolAt(move.getPosition());
             this.hintPieceImage.setImage(CHARACTER_IMAGES.get(piece));
-            this.hintDirectionImage.setImage(new Image(ARROW_IMAGE));
+            this.hintDirectionImage.setImage(ARROW_IMAGE);
             setRotateDirection(this.hintDirectionImage, move.getDirection());
 
         } catch (PetesPikeException ppe){
@@ -350,6 +369,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         bp.setBottom(messagepane);
         Scene scene = new Scene(bp);
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.setTitle("Petes Pike Game");
         stage.show();
     }
