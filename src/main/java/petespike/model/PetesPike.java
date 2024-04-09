@@ -204,6 +204,10 @@ public class PetesPike {
         int row = move.getPosition().getRow();
         int column = move.getPosition().getCol();
 
+
+        if(this.board[row][column] == MOUNTAINTOP_SYMBOL || this.board[row][column] == EMPTY_SYMBOL){
+            return false;
+        }
         row += move.getDirection().getRow();
         column += move.getDirection().getCol();
         while(row >= 0 && row < this.rows && column >= 0 && column < this.cols){
