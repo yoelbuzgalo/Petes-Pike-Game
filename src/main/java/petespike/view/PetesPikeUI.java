@@ -38,10 +38,10 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         CHARACTER_IMAGES.put('2', new Image("file:data/images/green_goat.png"));
         CHARACTER_IMAGES.put('3', new Image("file:data/images/yellow_goat.png"));
         CHARACTER_IMAGES.put('4', new Image("file:data/images/red_goat.png"));
-        //CHARACTER_IMAGES.put('5', new Image("file:data/images/gold_goat.png"));
+        CHARACTER_IMAGES.put('5', new Image("file:data/images/gold_goat.png"));
         CHARACTER_IMAGES.put('6', new Image("file:data/images/purple_goat.png"));
-        //CHARACTER_IMAGES.put('7', new Image("file:data/images/magenta_goat.png"));
-        //CHARACTER_IMAGES.put('8', new Image("file:data/images/cyan_goat.png"));
+        CHARACTER_IMAGES.put('7', new Image("file:data/images/magenta_goat.png"));
+        CHARACTER_IMAGES.put('8', new Image("file:data/images/cyan_goat.png"));
     }
 
     /**
@@ -78,7 +78,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         Button button = new Button();
         button.setPrefHeight(100);
         button.setPrefWidth(100);
-        if (!CHARACTER_IMAGES.containsKey(gridCharacter)){
+        if (!CHARACTER_IMAGES.containsKey(gridCharacter) || gridCharacter == 'T'){
             button.setDisable(true);
         }
         button.setBackground(createElementBackground(CHARACTER_IMAGES.get(gridCharacter)));
