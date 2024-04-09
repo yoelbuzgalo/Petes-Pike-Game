@@ -42,17 +42,10 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         CHARACTER_IMAGES.put('2', new Image("file:data/images/green_goat.png"));
         CHARACTER_IMAGES.put('3', new Image("file:data/images/yellow_goat.png"));
         CHARACTER_IMAGES.put('4', new Image("file:data/images/red_goat.png"));
-<<<<<<< HEAD
         CHARACTER_IMAGES.put('5', new Image("file:data/images/gray_goat.jpg"));
         CHARACTER_IMAGES.put('6', new Image("file:data/images/purple_goat.png"));
         CHARACTER_IMAGES.put('7', new Image("file:data/images/orange_goat.png"));
         CHARACTER_IMAGES.put('8', new Image("file:data/images/blue_goat.png"));
-=======
-        CHARACTER_IMAGES.put('5', new Image("file:data/images/gold_goat.png"));
-        CHARACTER_IMAGES.put('6', new Image("file:data/images/purple_goat.png"));
-        CHARACTER_IMAGES.put('7', new Image("file:data/images/magenta_goat.png"));
-        CHARACTER_IMAGES.put('8', new Image("file:data/images/cyan_goat.png"));
->>>>>>> 6f40c636d7a5a0886b686564dee41fccfb8442a9
     }
 
     /**
