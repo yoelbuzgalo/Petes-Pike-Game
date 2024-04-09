@@ -20,7 +20,7 @@ public class NewPuzzleEventHandler implements EventHandler<ActionEvent> {
         try {
             this.display.newGame(this.fileNameInput.getText());
         } catch (PetesPikeException ppe){
-            System.out.println(ppe.getMessage());
+            this.display.setMessage(ppe.getMessage());
         }
     }
 }

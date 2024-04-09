@@ -74,6 +74,7 @@ public class PetesPike {
             }
 
             this.mountainTopPosition = tempMountainTopPosition;
+            System.out.println(this.mountainTopPosition);
 
             // store initial position of pete
             this.peteInitialPosition = petePosition;
@@ -106,6 +107,7 @@ public class PetesPike {
         this.state = GameState.NEW;
         if (this.observer != null){
             this.observer.reset();
+            this.observer.updateStatus(this.state);
         }
     }
 
@@ -125,11 +127,6 @@ public class PetesPike {
         return this.filename;
     }
 
-    public char getChar(Position position){
-        System.out.println(board[position.getRow()][position.getCol()] + " ");
-        return board[position.getRow()][position.getCol()];
-    }
-
     public Set<Position> getGoatPositions() {
         return this.goatPositions;
     }
@@ -139,7 +136,7 @@ public class PetesPike {
     }
 
     //checks if valid position and returns char
-    public char getSymbolAt(Position position)throws PetesPikeException{
+    public char getSymbolAt(Position position) throws PetesPikeException{
         if(position.getCol() >= this.cols || position.getRow() >= this.rows){
             throw new PetesPikeException("Position out of range");
         }
@@ -186,13 +183,16 @@ public class PetesPike {
      * This returns a possible move based on any current board configuration
      * @return
      */
-    public Move getHint(){
+    public Move getHint() throws PetesPikeException {
         for(Move move : this.getPossibleMoves()){
             if(this.validMove(move)){
+                if (this.observer != null){
+                    this.observer.displayHint(move);
+                }
                 return move;
             }
         }
-        return null;
+        throw new PetesPikeException("There are no possible moves!");
     }
 
     /**
@@ -201,6 +201,10 @@ public class PetesPike {
      * @return
      */
     public boolean validMove(Move move){
+        if (this.getMountainTopPosition().equals(move.getPosition())){
+            return false;
+        }
+
         int row = move.getPosition().getRow();
         int column = move.getPosition().getCol();
 
@@ -213,13 +217,14 @@ public class PetesPike {
         while(row >= 0 && row < this.rows && column >= 0 && column < this.cols){
 
             if(this.board[row][column] != EMPTY_SYMBOL && this.board[row][column] != MOUNTAINTOP_SYMBOL){
+                this.state = GameState.IN_PROGRESS;
                 return true;
             }
 
             row += move.getDirection().getRow();
             column += move.getDirection().getCol();
         }
-
+        this.state = GameState.NO_MOVES;
         return false;
     }
 
@@ -287,23 +292,5 @@ public class PetesPike {
         else{
             throw new PetesPikeException(this.state.toString());
         }
-    }
-
-
-    public static void main(String[] args) {
-        try{
-        PetesPike pike = new PetesPike("data/petes_pike_5_7_4_0.txt");
-        System.out.println("rows " + pike.getRows());
-        System.out.println("cols " + pike.getCols());
-
-        for(int i = 0 ; i < pike.getBoard().length ; i++){
-            System.out.println(pike.getBoard()[i]);
-        }
-        }
-        catch(PetesPikeException e){
-            System.out.println(e.getMessage());
-        }
-
-
     }
 }
