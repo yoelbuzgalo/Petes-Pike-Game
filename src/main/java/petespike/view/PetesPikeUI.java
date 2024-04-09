@@ -49,16 +49,26 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     }
 
     /**
-     * Factory method that creates a standard button with event handler
-     * @param text
-     * @param eventHandler
+     * Factory function that creates a standard button with event handler
+     * @param text A string that will be the button's text
+     * @param eventHandler Pass in an event handler
      * @return
      */
     private static Button factoryButton(String text, EventHandler<ActionEvent> eventHandler){
         Button button = new Button(text);
         button.setOnAction(eventHandler);
         return button;
-    };
+    }
+
+    /**
+     * Factory function that creates a standard grid with borders
+     */
+    private static GridPane factoryGrid(){
+        GridPane gridLayout = new GridPane();
+        Border blackBorder = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
+        gridLayout.setBorder(blackBorder);
+        return gridLayout;
+    }
 
     /**
      * Helper class to rotate arrows of any object
@@ -77,6 +87,12 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
     }
 
+    /**
+     * Creates a button with arrows depending on its direction
+     * @param direction
+     * @param eventHandler
+     * @return
+     */
     private static Button arrowButton(Direction direction, EventHandler<ActionEvent> eventHandler){
         Button button = new Button();
         button.setRotate(90);
@@ -137,16 +153,6 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 this.gridButtons.put(new Position(i, j), gridElement);
             }
         }
-    }
-
-    /**
-     * Creates a default design of grid
-     */
-    private static GridPane factoryGrid(){
-        GridPane gridLayout = new GridPane();
-        Border blackBorder = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(2)));
-        gridLayout.setBorder(blackBorder);
-        return gridLayout;
     }
 
     /**
