@@ -7,9 +7,11 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -18,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PetesPikeUI extends Application implements PetesPikeObserver {
+    private static final String ARROW_IMAGE = "file:data/images/arrow.png";
     private static final Map<Character, Image> CHARACTER_IMAGES = new HashMap<>();
     private final Map<Position, Button> gridButtons = new HashMap<>();
     private boolean gameIsDisabled;
@@ -26,8 +29,8 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     private GridPane puzzleLayout;
     private GridPane moveButtonsGrid;
     private Button hintButton;
-    private Label pieceLabel;
-    private Label directionLabel;
+    private ImageView hintPieceImage;
+    private ImageView hintDirectionImage;
     private Label moveCount;
     private Label messageLabel;
 
@@ -58,6 +61,34 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     };
 
     /**
+     * Helper class to rotate arrows of any object
+     * @param node
+     * @param direction
+     */
+    private static void setRotateDirection(Node node, Direction direction){
+        if (direction == Direction.UP){
+            node.setRotate(90);
+        } else if (direction == Direction.DOWN) {
+            node.setRotate(270);
+        } else if (direction == Direction.LEFT){
+            node.setRotate(0);
+        } else if (direction == Direction.RIGHT){
+            node.setRotate(180);
+        }
+    }
+
+    private static Button arrowButton(Direction direction, EventHandler<ActionEvent> eventHandler){
+        Button button = new Button();
+        button.setRotate(90);
+        button.setPrefWidth(45);
+        button.setPrefHeight(45);
+        setRotateDirection(button, direction);
+        button.setBackground(new Background(new BackgroundImage(new Image(ARROW_IMAGE), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, true, false))));
+        button.setOnAction(eventHandler);
+        return button;
+    };
+
+    /**
      * Helper function to create a background for buttons
      * @param image
      * @return
@@ -66,7 +97,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         if (image == null){
             return new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, new Insets(0)));
         }
-        return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, false, false)));
+        return new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, true, false)));
     }
 
     /**
@@ -83,7 +114,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
             button.setDisable(true);
         }
         button.setBackground(createBackground(CHARACTER_IMAGES.get(gridCharacter)));
-        Border border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1), new Insets(5)));
+        Border border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(1), new Insets(0)));
         button.setBorder(border);
         button.setOnAction(handler);
         return button;
@@ -134,10 +165,10 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      */
     private GridPane createMoveButtons(){
         this.moveButtonsGrid = new GridPane();
-        moveButtonsGrid.add(factoryButton("Up", (x) -> handleMoveButtonClick(Direction.UP)), 1, 0);
-        moveButtonsGrid.add(factoryButton("Left", (x) -> handleMoveButtonClick(Direction.LEFT)), 0, 1);
-        moveButtonsGrid.add(factoryButton("Right", (x) -> handleMoveButtonClick(Direction.RIGHT)),2, 1);
-        moveButtonsGrid.add(factoryButton("Down", (x) -> handleMoveButtonClick(Direction.DOWN)), 1, 2);
+        moveButtonsGrid.add(arrowButton(Direction.UP, (x) -> handleMoveButtonClick(Direction.UP)), 1, 0);
+        moveButtonsGrid.add(arrowButton(Direction.LEFT, (x) -> handleMoveButtonClick(Direction.LEFT)), 0, 1);
+        moveButtonsGrid.add(arrowButton(Direction.RIGHT, (x) -> handleMoveButtonClick(Direction.RIGHT)),2, 1);
+        moveButtonsGrid.add(arrowButton(Direction.DOWN, (x) -> handleMoveButtonClick(Direction.DOWN)), 1, 2);
         return moveButtonsGrid;
     }
 
@@ -244,14 +275,16 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
     @Override
     public void displayHint(Move move){
         if (move == null){
-            this.pieceLabel.setText("");
-            this.directionLabel.setText("");
+            this.hintPieceImage.setImage(new Image("data/images/empty.png"));
+            this.hintDirectionImage.setImage(new Image("data/images/empty.png"));
             return;
         }
         try {
             char piece = this.engine.getSymbolAt(move.getPosition());
-            this.pieceLabel.setText(""+piece);
-            this.directionLabel.setText(move.getDirection().toString());
+            this.hintPieceImage.setImage(CHARACTER_IMAGES.get(piece));
+            this.hintDirectionImage.setImage(new Image(ARROW_IMAGE));
+            setRotateDirection(this.hintDirectionImage, move.getDirection());
+
         } catch (PetesPikeException ppe){
             this.messageLabel.setText(ppe.getMessage());
         }
@@ -286,8 +319,12 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
 
         HBox hintBox = new HBox();
-        this.pieceLabel = new Label("");
-        this.directionLabel = new Label("");
+        this.hintPieceImage = new ImageView(new Image("file:data/images/empty.png"));
+        this.hintPieceImage.setFitWidth(30);
+        this.hintPieceImage.setFitHeight(30);
+        this.hintDirectionImage = new ImageView(new Image("file:data/images/empty.png"));
+        this.hintDirectionImage.setFitWidth(30);
+        this.hintDirectionImage.setFitHeight(30);
         this.hintButton = factoryButton("Get Hint", (x) -> {
             try {
                 this.engine.getHint();
@@ -295,8 +332,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 this.setMessage(e.getMessage());
             }
         });
-        hintBox.getChildren().addAll(pieceLabel, this.directionLabel);
-        // TODO: Add here images into the hint box
+        hintBox.getChildren().addAll(hintPieceImage, this.hintDirectionImage);
 
         sideBox.getChildren().addAll(moveButtonsGrid, this.hintButton, hintBox);
 
