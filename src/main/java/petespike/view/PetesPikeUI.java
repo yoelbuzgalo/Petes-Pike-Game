@@ -42,10 +42,10 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         CHARACTER_IMAGES.put('2', new Image("file:data/images/green_goat.png"));
         CHARACTER_IMAGES.put('3', new Image("file:data/images/yellow_goat.png"));
         CHARACTER_IMAGES.put('4', new Image("file:data/images/red_goat.png"));
-        CHARACTER_IMAGES.put('5', new Image("file:data/images/gold_goat.png"));
+        CHARACTER_IMAGES.put('5', new Image("file:data/images/gray_goat.jpg"));
         CHARACTER_IMAGES.put('6', new Image("file:data/images/purple_goat.png"));
-        CHARACTER_IMAGES.put('7', new Image("file:data/images/magenta_goat.png"));
-        CHARACTER_IMAGES.put('8', new Image("file:data/images/cyan_goat.png"));
+        CHARACTER_IMAGES.put('7', new Image("file:data/images/orange_goat.png"));
+        CHARACTER_IMAGES.put('8', new Image("file:data/images/blue_goat.png"));
     }
 
     /**
@@ -308,6 +308,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         // Initialize the game engine
         String filePath = "data/petes_pike_5_5_2_0.txt"; // default starting puzzle
         this.engine = new PetesPike(filePath);
+        for(int i = 0 ; i < this.engine.getBoard().length ; i++){
+            System.out.println(this.engine.getBoard()[i]);
+        }
         this.clickedPosition = null;
         this.engine.registerObserver(this);
 
