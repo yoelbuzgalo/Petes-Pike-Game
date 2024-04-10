@@ -247,6 +247,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
         // TODO: Fix so that the background of mountaintop doesnt go away, we need to make mountaintop a stackpane
         // TODO: Another bug is that a goat could be stuck on mountaintop and not move since mountaintop button is disabled
+        // TODO: Another bug is that the hint box stays stuck even after resetting or making every piece
     }
 
     @Override
