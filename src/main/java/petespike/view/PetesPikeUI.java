@@ -237,14 +237,10 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         this.moveCount.setText("Moves: " + engine.getMoveCount());
         Button fromElement = this.gridButtons.get(from);
         Button toElement = this.gridButtons.get(to);
+        toElement.setBackground(fromElement.getBackground());
+        toElement.setDisable(false);
         fromElement.setBackground(createBackground(null));
         fromElement.setDisable(true);
-        try {
-            toElement.setBackground(createBackground(CHARACTER_IMAGES.get(this.engine.getSymbolAt(to))));
-            toElement.setDisable(false);
-        } catch (PetesPikeException e) {
-            this.messageLabel.setText(e.getMessage());
-        }
         // TODO: Fix so that the background of mountaintop doesnt go away, we need to make mountaintop a stackpane
         // TODO: Another bug is that a goat could be stuck on mountaintop and not move since mountaintop button is disabled
         // TODO: Another bug is that the hint box stays stuck even after resetting or making every piece, also the hint box does not display possible moves of a goat
