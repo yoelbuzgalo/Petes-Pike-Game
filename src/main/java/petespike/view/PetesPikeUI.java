@@ -258,8 +258,6 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         fromElement.setDisable(true);
         this.setHintToEmpty();
         // TODO: Fix so that the background of mountaintop doesn't go away, we need to make mountaintop a StackPane
-        // TODO: Another bug is that a goat could be stuck on mountaintop and not move since mountaintop button is disabled
-        // TODO: The hint box does not display possible moves of a goat
     }
 
     @Override
