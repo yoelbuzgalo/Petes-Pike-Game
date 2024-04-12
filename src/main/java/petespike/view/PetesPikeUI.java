@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PetesPikeUI extends Application implements PetesPikeObserver {
+    private static final Image EMPTY_IMAGE = new Image("file:data/images/empty.png");
     private static final Image ARROW_IMAGE = new Image("file:data/images/arrow.png");
     private static final Map<Character, Image> CHARACTER_IMAGES = new HashMap<>();
     private final Map<Position, Button> gridButtons = new HashMap<>();
@@ -241,9 +242,10 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         toElement.setDisable(false);
         fromElement.setBackground(createBackground(null));
         fromElement.setDisable(true);
+        this.setHintToEmpty();
         // TODO: Fix so that the background of mountaintop doesnt go away, we need to make mountaintop a stackpane
         // TODO: Another bug is that a goat could be stuck on mountaintop and not move since mountaintop button is disabled
-        // TODO: Another bug is that the hint box stays stuck even after resetting or making every piece, also the hint box does not display possible moves of a goat
+        // TODO: The hint box does not display possible moves of a goat
     }
 
     @Override
@@ -264,6 +266,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
             }
         }
         this.setOpacityAndDisableControls(false);
+        this.setHintToEmpty();
     }
 
     @Override
@@ -277,11 +280,18 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
     }
 
+    /**
+     * Helper function to set the hint to empty
+     */
+    private void setHintToEmpty(){
+        this.hintPieceImage.setImage(EMPTY_IMAGE);
+        this.hintDirectionImage.setImage(EMPTY_IMAGE);
+    }
+
     @Override
     public void displayHint(Move move){
         if (move == null){
-            this.hintPieceImage.setImage(new Image("data/images/empty.png"));
-            this.hintDirectionImage.setImage(new Image("data/images/empty.png"));
+            this.setHintToEmpty();
             return;
         }
         try {
