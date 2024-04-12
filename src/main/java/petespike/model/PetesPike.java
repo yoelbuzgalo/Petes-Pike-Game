@@ -201,9 +201,6 @@ public class PetesPike {
      * @return
      */
     public boolean validMove(Move move){
-        // if (this.getMountainTopPosition().equals(move.getPosition())){
-        //     return false;
-        // }
 
         int row = move.getPosition().getRow();
         int column = move.getPosition().getCol();
@@ -254,7 +251,9 @@ public class PetesPike {
 
         //holds moving char and changes that position to an empty symbol
         char moving = board[move.getPosition().getRow()][move.getPosition().getCol()];
-        if(move.getPosition() == mountainTopPosition){
+        System.out.println(mountainTopPosition);
+        System.out.println(move.getPosition());
+        if(move.getPosition().equals(mountainTopPosition)){
             board[move.getPosition().getRow()][move.getPosition().getCol()] = MOUNTAINTOP_SYMBOL;
         }
         else{

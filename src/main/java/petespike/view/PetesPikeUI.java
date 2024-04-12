@@ -254,7 +254,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         Button toElement = this.gridButtons.get(to);
         toElement.setBackground(fromElement.getBackground());
         toElement.setDisable(false);
-        fromElement.setBackground(createBackground(null));
+        fromElement.setBackground(createBackground(CHARACTER_IMAGES.get(engine.getBoard()[from.getRow()][from.getCol()])));
         fromElement.setDisable(true);
         this.setHintToEmpty();
         // TODO: Fix so that the background of mountaintop doesn't go away, we need to make mountaintop a StackPane
