@@ -201,9 +201,9 @@ public class PetesPike {
      * @return
      */
     public boolean validMove(Move move){
-        if (this.getMountainTopPosition().equals(move.getPosition())){
-            return false;
-        }
+        // if (this.getMountainTopPosition().equals(move.getPosition())){
+        //     return false;
+        // }
 
         int row = move.getPosition().getRow();
         int column = move.getPosition().getCol();
@@ -254,7 +254,13 @@ public class PetesPike {
 
         //holds moving char and changes that position to an empty symbol
         char moving = board[move.getPosition().getRow()][move.getPosition().getCol()];
-        board[move.getPosition().getRow()][move.getPosition().getCol()] = EMPTY_SYMBOL;
+        if(move.getPosition() == mountainTopPosition){
+            board[move.getPosition().getRow()][move.getPosition().getCol()] = MOUNTAINTOP_SYMBOL;
+        }
+        else{
+            board[move.getPosition().getRow()][move.getPosition().getCol()] = EMPTY_SYMBOL;
+        }
+        
 
         //loops until out of range of board
         while((newRow >= 0 && newRow < this.rows) && (newCol >= 0 && newCol < this.cols)){

@@ -144,6 +144,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         for (int i = 0; i < this.engine.getRows(); i++) {
             for (int j = 0; j < this.engine.getCols(); j++) {
                 Button gridElement = createGridButtons(this.engine.getBoard()[i][j], new GridEventHandler(i, j, this));
+                gridElement.setOpacity(1);
                 this.puzzleLayout.add(gridElement, j, i);
                 Position key = new Position(i, j);
                 if (key.equals(engine.getMountainTopPosition())) {
