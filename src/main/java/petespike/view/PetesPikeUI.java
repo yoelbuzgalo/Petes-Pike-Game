@@ -53,7 +53,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
      * Factory function that creates a standard button with event handler
      * @param text A string that will be the button's text
      * @param eventHandler Pass in an event handler
-     * @return
+     * @return returns a button UI object
      */
     private static Button factoryButton(String text, EventHandler<ActionEvent> eventHandler){
         Button button = new Button(text);
@@ -73,8 +73,8 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
     /**
      * Helper class to rotate arrows of any object
-     * @param node
-     * @param direction
+     * @param node pass in the node object
+     * @param direction pass in the direction enum
      */
     private static void rotateArrowDirection(Node node, Direction direction){
         if (direction == Direction.UP){
@@ -90,9 +90,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
     /**
      * Creates a button with arrows depending on its direction
-     * @param direction
-     * @param eventHandler
-     * @return
+     * @param direction pass in the direction that will be for the arrow button
+     * @param eventHandler pass in an event handler when the button is clicked
+     * @return returns an arrow button
      */
     private static Button arrowButton(Direction direction, EventHandler<ActionEvent> eventHandler){
         Button button = new Button();
@@ -103,12 +103,12 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         button.setBackground(new Background(new BackgroundImage(ARROW_IMAGE, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, false, false, true, false))));
         button.setOnAction(eventHandler);
         return button;
-    };
+    }
 
     /**
      * Helper function to create a background for buttons
-     * @param image
-     * @return
+     * @param image pass in an image
+     * @return returns a background with image
      */
     private static Background createBackground(Image image){
         if (image == null){
@@ -119,9 +119,9 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
     /**
      * Creates elements in a grid
-     * @param gridCharacter Pass in a grid character
-     * @param handler Pass in
-     * @return
+     * @param gridCharacter pass in a grid character
+     * @param handler pass in a handler for click event
+     * @return returns a button for every grid element/character
      */
     private static Button createGridButtons(char gridCharacter , EventHandler<ActionEvent> handler){
         Button button = new Button();
@@ -158,7 +158,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
     /**
      * Helper function to handle a move button click
-     * @param direction Pass in the direction of move
+     * @param direction pass in the direction of move
      */
     private void handleMoveButtonClick(Direction direction) {
         if(this.clickedPosition == null){
@@ -177,7 +177,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
     /**
      * Creates a grid of move buttons
-     * @return Returns a grid of move buttons
+     * @return returns a grid of move buttons
      */
     private GridPane createMoveButtons(){
         this.moveButtonsGrid = new GridPane();
@@ -190,12 +190,17 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
     /**
      * Setter method to set the clicked position of grid buttons
-     * @param clickedPosition
+     * @param clickedPosition pass in the position that was just clicked
      */
     public void setClickedPosition(Position clickedPosition) {
         this.clickedPosition = clickedPosition;
     }
 
+    /**
+     * Helper function to set the opacity and disable controls
+     * @param opacity pass in desired opacity
+     * @param disable pass in desired true/false for disabling controls
+     */
     private void setOpacityAndDisable(double opacity, boolean disable){
         for(Button button : this.gridButtons.values()){
             button.setOpacity(opacity);
@@ -223,6 +228,11 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         }
     }
 
+    /**
+     * Creates a new game with a file path argument
+     * @param fileName pass in a string of the file path
+     * @throws PetesPikeException throws an exception when file isn't found
+     */
     public void newGame(String fileName) throws PetesPikeException {
         this.clickedPosition = null;
         this.engine = new PetesPike(fileName);
@@ -243,7 +253,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         fromElement.setBackground(createBackground(null));
         fromElement.setDisable(true);
         this.setHintToEmpty();
-        // TODO: Fix so that the background of mountaintop doesnt go away, we need to make mountaintop a stackpane
+        // TODO: Fix so that the background of mountaintop doesn't go away, we need to make mountaintop a StackPane
         // TODO: Another bug is that a goat could be stuck on mountaintop and not move since mountaintop button is disabled
         // TODO: The hint box does not display possible moves of a goat
     }
@@ -333,7 +343,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
 
         // Side Box
         VBox sideBox = new VBox();
-        GridPane moveButtonsGrid = createMoveButtons();
+        this.moveButtonsGrid = createMoveButtons();
 
 
         HBox hintBox = new HBox();
