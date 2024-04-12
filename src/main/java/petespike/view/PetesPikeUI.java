@@ -237,10 +237,13 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         this.clickedPosition = null;
         this.engine = new PetesPike(fileName);
         this.engine.registerObserver(this);
+        this.updateStatus(this.engine.getState());
         this.puzzleLayout.getChildren().clear();
         this.gridButtons.clear();
         this.loadGridFromEngine();
         this.moveCount.setText("Moves: " + this.engine.getMoveCount());
+        this.setOpacityAndDisableControls(false);
+        this.setHintToEmpty();
     }
 
     @Override
