@@ -270,5 +270,24 @@ public class PetesPikeTest {
         assertNotSame(petesPikeDeepCopied.getBoard(), petesPikeOriginal.getBoard());
         assertNotSame(petesPikeDeepCopied.getGoatPositions(), petesPikeOriginal.getGoatPositions());
     }
+
+    @Test
+    public void testBoardDeepCopyBoardSize(){
+        // Setup
+        PetesPike petesPikeOriginal = null;
+        PetesPike petesPikeDeepCopied;
+        try {
+            petesPikeOriginal = new PetesPike("data/petes_pike_5_5_2_0.txt");
+        } catch (PetesPikeException e) {}
+
+        // Invoke
+        assertNotNull(petesPikeOriginal); // ensure that original isn't null
+        petesPikeDeepCopied = new PetesPike(petesPikeOriginal);
+
+        // Analysis
+        assertNotNull(petesPikeDeepCopied);
+        assertEquals(petesPikeDeepCopied.getBoard().length, petesPikeOriginal.getBoard().length);
+        assertEquals(petesPikeDeepCopied.getBoard()[0].length, petesPikeOriginal.getBoard()[0].length);
+    }
         
 }
