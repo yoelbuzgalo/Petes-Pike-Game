@@ -23,11 +23,14 @@ public class PetesPike implements Configuration<PetesPike> {
     private final Position mountainTopPosition;
     private final Position peteInitialPosition;
 
-    private Set<Position> goatPositions;
-    private char[][] board;
+    private final Set<Position> goatPositions;
+    private final char[][] board;
     private int moveCount;
     private Position petePosition;
     private GameState state;
+
+    private List<Move> moves;
+    private Set<char[][]> reached;
 
     private PetesPikeObserver observer;
 
@@ -81,6 +84,9 @@ public class PetesPike implements Configuration<PetesPike> {
         } catch (IOException ioe) {
             throw new PetesPikeException(ioe.getMessage());
         }
+
+        this.moves = new ArrayList<>();
+        this.reached = new HashSet<>();
     }
 
     public PetesPike(PetesPike other){
@@ -100,6 +106,9 @@ public class PetesPike implements Configuration<PetesPike> {
         this.petePosition = other.petePosition;
         this.state = other.state;
         this.observer = null;
+
+        this.moves = new ArrayList<>(other.moves);
+        this.reached = new HashSet<>(other.reached);
 
     }
 
