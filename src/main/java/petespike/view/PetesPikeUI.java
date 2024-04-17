@@ -257,7 +257,6 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         fromElement.setBackground(createBackground(CHARACTER_IMAGES.get(engine.getBoard()[from.getRow()][from.getCol()])));
         fromElement.setDisable(true);
         this.setHintToEmpty();
-        // TODO: Fix so that the background of mountaintop doesn't go away, we need to make mountaintop a StackPane
     }
 
     @Override
@@ -326,9 +325,6 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         // Initialize the game engine
         String filePath = "data/petes_pike_5_5_2_0.txt"; // default starting puzzle
         this.engine = new PetesPike(filePath);
-        for(int i = 0 ; i < this.engine.getBoard().length ; i++){
-            System.out.println(this.engine.getBoard()[i]);
-        }
         this.clickedPosition = null;
         this.engine.registerObserver(this);
 
