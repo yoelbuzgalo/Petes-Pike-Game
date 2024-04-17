@@ -10,7 +10,7 @@ import java.util.*;
 import backtracker.Configuration;
 import petespike.view.PetesPikeObserver;
 
-public class PetesPike implements Configuration<PetesPike> {
+public class PetesPike {
     private final static char MOUNTAINTOP_SYMBOL = 'T';
     private final static char EMPTY_SYMBOL = '-';
     private final static char PETE_SYMBOL = 'P';
@@ -29,8 +29,6 @@ public class PetesPike implements Configuration<PetesPike> {
     private Position petePosition;
     private GameState state;
 
-    private List<Move> moves;
-    private Set<char[][]> reached;
 
     private PetesPikeObserver observer;
 
@@ -85,8 +83,6 @@ public class PetesPike implements Configuration<PetesPike> {
             throw new PetesPikeException(ioe.getMessage());
         }
 
-        this.moves = new ArrayList<>();
-        this.reached = new HashSet<>();
     }
 
     public PetesPike(PetesPike other){
@@ -107,8 +103,6 @@ public class PetesPike implements Configuration<PetesPike> {
         this.state = other.state;
         this.observer = null;
 
-        this.moves = new ArrayList<>(other.moves);
-        this.reached = new HashSet<>(other.reached);
 
     }
 
@@ -325,18 +319,4 @@ public class PetesPike implements Configuration<PetesPike> {
         }
     }
 
-    @Override
-    public Collection<PetesPike> getSuccessors() {
-        return List.of();
-    }
-
-    @Override
-    public boolean isValid() {
-        return false;
-    }
-
-    @Override
-    public boolean isGoal() {
-        return false;
-    }
 }
