@@ -45,7 +45,7 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
    @Override
    public boolean isValid() {
        try{
-        engine.makeMove(moves.get(-1));
+        engine.makeMove(moves.get(moves.size() - 1));
 
         return true;
        }
