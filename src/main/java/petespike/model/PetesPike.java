@@ -3,17 +3,14 @@ package petespike.model;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.*;
 //import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 //import java.util.Map;
-import java.util.Set;
 
+import backtracker.Configuration;
 import petespike.view.PetesPikeObserver;
 
-public class PetesPike {
+public class PetesPike implements Configuration<PetesPike> {
     private final static char MOUNTAINTOP_SYMBOL = 'T';
     private final static char EMPTY_SYMBOL = '-';
     private final static char PETE_SYMBOL = 'P';
@@ -84,6 +81,26 @@ public class PetesPike {
         } catch (IOException ioe) {
             throw new PetesPikeException(ioe.getMessage());
         }
+    }
+
+    public PetesPike(PetesPike other){
+        char[][] temp = other.getBoard();
+        this.board = new char[temp.length][temp[0].length];
+        for(int i = 0; i < temp.length; i++){
+            this.board[i] = Arrays.copyOf(temp[i], temp[i].length);
+        }
+        this.filename = other.filename;
+        this.rows = other.rows;
+        this.cols = other.cols;
+        this.initialBoard = other.initialBoard;
+        this.mountainTopPosition = other.mountainTopPosition;
+        this.peteInitialPosition = other.peteInitialPosition;
+        this.goatPositions = new HashSet<>(other.goatPositions);
+        this.moveCount = other.moveCount;
+        this.petePosition = other.petePosition;
+        this.state = other.state;
+        this.observer = null;
+
     }
 
     /**
@@ -297,5 +314,20 @@ public class PetesPike {
         else{
             throw new PetesPikeException(this.state.toString());
         }
+    }
+
+    @Override
+    public Collection<PetesPike> getSuccessors() {
+        return List.of();
+    }
+
+    @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
+    public boolean isGoal() {
+        return false;
     }
 }
