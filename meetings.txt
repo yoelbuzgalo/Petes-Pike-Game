@@ -1,2 +1,5 @@
 Sat 1pm - Discord - Pete's Pike class
 Mon 7pm - Discord - Petespikecli class
+
+Sat 1pm - Discord - Constructor and other set up
+Sun 1pm - Discord - backtracker functions
