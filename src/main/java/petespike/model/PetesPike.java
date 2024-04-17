@@ -255,7 +255,7 @@ public class PetesPike {
      */
     public void makeMove(Move move) throws PetesPikeException{
         //checks if move is possible
-        if(!validMove(move)){
+        if(!this.validMove(move)){
             throw new PetesPikeException("Move not valid");
         }
         if(this.state == GameState.WON){
