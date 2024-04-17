@@ -1,0 +1,5 @@
+1. a list of moves made
+2. copy and then add a possible move to the list of moves
+3. use the function to test if the move is valid / see if makeMove function throws an exception
+4. see if Pete's position is hte mountaintop position
+5. we have to be worried about cycles. We can avoid them by implementing a move set to make sure we aren't making the same moves over and over
