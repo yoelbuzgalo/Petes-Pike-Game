@@ -1,7 +1,5 @@
 package model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.jupiter.api.Test;
 
 import petespike.model.Direction;
@@ -10,6 +8,8 @@ import petespike.model.Move;
 import petespike.model.PetesPike;
 import petespike.model.PetesPikeException;
 import petespike.model.Position;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PetesPikeTest {
     @Test
@@ -86,14 +86,10 @@ public class PetesPikeTest {
         try{
             PetesPike game = new PetesPike("data/petes_pike_5_5_2_0.txt");
             game.makeMove(new Move(new Position(-1, 4) , Direction.LEFT));
-
-
-
-            assert false;
-    
+            assertFalse(false);
         }
         catch(PetesPikeException e){
-            assert true;
+            assertTrue(true);
         }    
     }
 
@@ -238,14 +234,21 @@ public class PetesPikeTest {
 
     @Test
     public void testBoardCols(){
-        try{
-            PetesPike game = new PetesPike("data/petes_pike_5_7_4_0.txt");
+        // Setup
+        int expectedLength = 7;
+        PetesPike game = null;
 
-            assert game.getBoard()[0].length == 5;
+        // Invoke
+        try{
+            game = new PetesPike("data/petes_pike_5_7_4_0.txt");
         }
         catch(PetesPikeException e){
-            assert false;
+            assertFalse(false);
         }
+
+        // Analysis
+        assertNotNull(game);
+        assertEquals(expectedLength, game.getBoard()[0].length);
     }
 
         
