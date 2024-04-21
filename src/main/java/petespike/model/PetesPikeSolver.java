@@ -9,47 +9,48 @@ import backtracker.Backtracker;
 import backtracker.Configuration;
 
 public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
-    private List<Move> moves;
-    private PetesPike engine;
+    private final List<Move> moves = new ArrayList<>();
+    private final PetesPike engine;
 
-    public PetesPikeSolver(PetesPike engine){
-        this.engine = new PetesPike(engine);
-        moves = new ArrayList<>();
+    /**
+     * Constructor
+     * @param original
+     */
+    public PetesPikeSolver(PetesPike original, List<Move> moves){
+        this.engine = original;
+        if (moves != null){
+            this.moves.addAll(moves);
+        }
     }
 
-    public PetesPikeSolver(PetesPikeSolver other){
-        this.moves = new ArrayList<>(other.moves);
-        this.engine = new PetesPike(other.engine);
+    /**
+     * Getter method that gets
+     * @return
+     */
+    public List<Move> getMoves() {
+        return this.moves;
     }
 
-    public void addMove(Move move){
-        moves.addLast(move);
-    }
-
-    
-
-   @Override
+    @Override
    public Collection<PetesPikeSolver> getSuccessors() {
-       Collection<PetesPikeSolver> collection = new HashSet<>();
 
-       for(Move move: engine.getPossibleMoves()){
-        PetesPikeSolver solver = new PetesPikeSolver(this);
-        solver.addMove(move);
-        collection.add(solver);
+        List<PetesPikeSolver> successors = new ArrayList<>();
 
+       for(Move move: this.engine.getPossibleMoves()) {
+           PetesPikeSolver successor = new PetesPikeSolver(new PetesPike(this.engine), this.moves);
+           successor.moves.add(move);
+           successors.add(successor);
        }
 
-       return collection;
+       return successors;
    }
 
    @Override
    public boolean isValid() {
        try{
-        engine.makeMove(moves.get(moves.size() - 1));
-
+           this.engine.makeMove(this.getMoves().getLast());
         return true;
        }
-
        catch(PetesPikeException e){
             return false;
        }
@@ -57,14 +58,14 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
 
    @Override
    public boolean isGoal() {
-       return engine.getState() == GameState.WON;
+       return this.engine.getState() == GameState.WON;
    }
 
-   public static void main(String[] args) throws PetesPikeException {
-    PetesPikeSolver solver = new PetesPikeSolver(new PetesPike("data/petes_pike_5_5_2_0.txt"));
-    Backtracker<PetesPikeSolver> back = new Backtracker<>(false);
-    PetesPikeSolver solution = back.solve(solver);
-    System.out.println(solution.moves);
+    public static void main(String[] args) throws PetesPikeException {
+        PetesPikeSolver configuration = new PetesPikeSolver(new PetesPike("data/petes_pike_5_5_2_0.txt"), null);
+        Backtracker<PetesPikeSolver> solver = new Backtracker<>(true);
+        PetesPikeSolver solution = solver.solve(configuration);
+        System.out.println(solution.getMoves());
    }
 
 }

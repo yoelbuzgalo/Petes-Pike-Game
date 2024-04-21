@@ -86,7 +86,6 @@ public class PetesPike {
     }
 
     public PetesPike(PetesPike other) {
-
         char[][] temp = other.getBoard();
         this.board = new char[temp.length][temp[0].length];
         for(int i = 0; i < temp.length; i++){
@@ -103,8 +102,6 @@ public class PetesPike {
         this.petePosition = other.petePosition;
         this.state = other.state;
         this.observer = null;
-
-
     }
 
     /**
