@@ -43,40 +43,39 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     }
 
     @Override
-   public Collection<PetesPikeSolver> getSuccessors() {
-
+    public Collection<PetesPikeSolver> getSuccessors() {
         List<PetesPikeSolver> successors = new ArrayList<>();
 
-       for(Move move: this.engine.getPossibleMoves()) {
-           PetesPikeSolver successor = new PetesPikeSolver(new PetesPike(this.engine), this.moves);
-           successor.moves.add(move);
-           successors.add(successor);
-       }
+        for(Move move: this.engine.getPossibleMoves()) {
+            PetesPikeSolver successor = new PetesPikeSolver(new PetesPike(this.engine), this.moves);
+            successor.moves.add(move);
+            successors.add(successor);
+        }
 
-       return successors;
-   }
+        return successors;
+    }
 
-   @Override
-   public boolean isValid() {
-       try{
-           this.engine.makeMove(this.getMoves().getLast());
-        return true;
-       }
-       catch(PetesPikeException e){
+    @Override
+    public boolean isValid() {
+        try{
+            this.engine.makeMove(this.getMoves().getLast());
+            return true;
+        }
+        catch(PetesPikeException e){
             return false;
-       }
-   }
+        }
+    }
 
-   @Override
-   public boolean isGoal() {
-       return this.engine.getState() == GameState.WON;
-   }
+    @Override
+    public boolean isGoal() {
+        return this.engine.getState() == GameState.WON;
+    }
 
     public static void main(String[] args) throws PetesPikeException {
-       PetesPikeSolver petesPikeSolver = solve(new PetesPike("data/petes_pike_5_5_2_0.txt"));
-       if (petesPikeSolver != null){
-           System.out.println(petesPikeSolver.getMoves().toString());
-       }
-   }
+        PetesPikeSolver petesPikeSolver = solve(new PetesPike("data/petes_pike_5_5_2_0.txt"));
+        if (petesPikeSolver != null){
+            System.out.println(petesPikeSolver.getMoves().toString());
+        }
+    }
 
 }
