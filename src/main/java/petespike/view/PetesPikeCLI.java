@@ -21,6 +21,7 @@ public class PetesPikeCLI {
             "new <puzzle_filename> - starts a new puzzle",
             "move - <row> <col> <direction> - move the piece at <row>, <col> in the <direction>.\n\t <direction> is one of u(p), d(own), l(eft), r(ight).",
             "hint - displays a valid move given the current board configuration",
+            "solve - solves the game",
             "quit - quits the game"
     };
 
@@ -144,7 +145,6 @@ public class PetesPikeCLI {
                     // If the game was already won, reject the move
                     checkIfActiveGame(game);
                     Direction direction = getDirection(parsedInput);
-
                     // Make the move
                     game.makeMove(new Move(new Position(Integer.parseInt(parsedInput[1]), Integer.parseInt(parsedInput[2])), direction));
                     // If the move changed the game's state to won - the CLI will print out
@@ -152,7 +152,6 @@ public class PetesPikeCLI {
                         System.out.println("Congratulations, you have scaled the mountain!");
                     }
                 } else if (parsedInput[0].equals("hint")){
-
                     checkIfActiveGame(game);
                     Move hintedMove = game.getHint();
                     if (hintedMove != null) {
@@ -160,7 +159,6 @@ public class PetesPikeCLI {
                     } else {
                         System.out.println("There is no possible moves!");
                     }
-
                 } else if (parsedInput[0].equals("quit")){
                     return;
                 } else {

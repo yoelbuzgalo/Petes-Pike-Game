@@ -202,13 +202,9 @@ public class PetesPike {
      * @return
      */
     public Move getHint() throws PetesPikeException {
-        for(Move move : this.getPossibleMoves()){
-            if(this.validMove(move)){
-                if (this.observer != null){
-                    this.observer.displayHint(move);
-                }
-                return move;
-            }
+        PetesPikeSolver solution = PetesPikeSolver.solve(this);
+        if (solution != null){
+            return solution.getMoves().getFirst();
         }
         throw new PetesPikeException("There are no possible moves!");
     }
