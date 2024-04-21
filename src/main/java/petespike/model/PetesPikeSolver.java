@@ -44,6 +44,7 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
 
     @Override
     public Collection<PetesPikeSolver> getSuccessors() {
+        // TODO: The solver works, but we need to add a preventative case for cycle, since this will work with boards that do have solutions but not for boards that don't (runs out of memory)
         List<PetesPikeSolver> successors = new ArrayList<>();
 
         for(Move move: this.engine.getPossibleMoves()) {

@@ -173,6 +173,8 @@ public class PetesPikeCLI {
                             System.out.println("Congratulations, you have scaled the mountain!");
                         }
                         solved = true;
+                    } else {
+                        System.out.println("Sorry, there is no solution available");
                     }
                 } else if (parsedInput[0].equals("quit")){
                     return;
