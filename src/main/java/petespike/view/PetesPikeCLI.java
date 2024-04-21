@@ -128,6 +128,7 @@ public class PetesPikeCLI {
      * @param game
      */
     private static void promptUser(PetesPike game){
+        boolean solved = false;
         while(true){
             System.out.print("Command: ");
             String stringInput = input.nextLine();
@@ -139,6 +140,7 @@ public class PetesPikeCLI {
                     // do nothing, it prints every command anyways
                 } else if (parsedInput[0].equals("reset")){
                     game.reset();
+                    solved = false;
                 } else if (parsedInput[0].equals("new") && parsedInput.length == 2 && !parsedInput[1].isEmpty()){
                     game = new PetesPike(parsedInput[1]);
                 } else if (parsedInput[0].equals("move") && parsedInput.length == 4 && !parsedInput[1].isEmpty() && !parsedInput[2].isEmpty() && !parsedInput[3].isEmpty()){
@@ -151,7 +153,7 @@ public class PetesPikeCLI {
                     if (game.getState() == GameState.WON){
                         System.out.println("Congratulations, you have scaled the mountain!");
                     }
-                } else if (parsedInput[0].equals("hint")){
+                } else if (parsedInput[0].equals("hint")) {
                     checkIfActiveGame(game);
                     Move hintedMove = game.getHint();
                     if (hintedMove != null) {
@@ -159,12 +161,27 @@ public class PetesPikeCLI {
                     } else {
                         System.out.println("There is no possible moves!");
                     }
+                } else if (parsedInput[0].equals("solve")) {
+                    checkIfActiveGame(game);
+                    PetesPikeSolver solution = PetesPikeSolver.solve(game);
+                    if (solution != null){
+                        for(Move move : solution.getMoves()){
+                            game.makeMove(move);
+                            printBoard(game);
+                        }
+                        if (game.getState() == GameState.WON){
+                            System.out.println("Congratulations, you have scaled the mountain!");
+                        }
+                        solved = true;
+                    }
                 } else if (parsedInput[0].equals("quit")){
                     return;
                 } else {
                     throw new PetesPikeException(stringInput);
                 }
-                printBoard(game);
+                if (!solved){
+                    printBoard(game);
+                }
             } catch (PetesPikeException ppe) {
                 System.out.println("Invalid command: " + ppe.getMessage());
             }
