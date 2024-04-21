@@ -13,8 +13,19 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     private final PetesPike engine;
 
     /**
+     * Static method that returns a solution instance
+     * @param engine pass in an engine you want to solve
+     * @return returns an instance of a valid solution or null if there is no solution
+     */
+    public static PetesPikeSolver solve (PetesPike engine) {
+        PetesPikeSolver configuration = new PetesPikeSolver(engine, null);
+        Backtracker<PetesPikeSolver> solver = new Backtracker<>(false);
+        return solver.solve(configuration);
+    }
+
+    /**
      * Constructor
-     * @param original
+     * @param original pass in an original configuration
      */
     public PetesPikeSolver(PetesPike original, List<Move> moves){
         this.engine = original;
@@ -24,8 +35,8 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     }
 
     /**
-     * Getter method that gets
-     * @return
+     * Getter method that gets the moves of a current configuration
+     * @return returns a list of moves
      */
     public List<Move> getMoves() {
         return this.moves;
@@ -62,10 +73,10 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
    }
 
     public static void main(String[] args) throws PetesPikeException {
-        PetesPikeSolver configuration = new PetesPikeSolver(new PetesPike("data/petes_pike_5_5_2_0.txt"), null);
-        Backtracker<PetesPikeSolver> solver = new Backtracker<>(true);
-        PetesPikeSolver solution = solver.solve(configuration);
-        System.out.println(solution.getMoves());
+       PetesPikeSolver petesPikeSolver = solve(new PetesPike("data/petes_pike_5_5_2_0.txt"));
+       if (petesPikeSolver != null){
+           System.out.println(petesPikeSolver.getMoves().toString());
+       }
    }
 
 }
