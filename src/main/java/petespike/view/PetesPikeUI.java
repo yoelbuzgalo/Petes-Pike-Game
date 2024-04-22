@@ -353,7 +353,7 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
         this.hintDirectionImage.setFitHeight(30);
         this.hintButton = factoryButton("Get Hint", (x) -> {
             try {
-                this.engine.getHint();
+                displayHint(this.engine.getHint());
             } catch (PetesPikeException e) {
                 this.setMessage(e.getMessage());
             }
