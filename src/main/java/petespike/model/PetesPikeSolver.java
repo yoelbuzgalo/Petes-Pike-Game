@@ -13,7 +13,7 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     private final List<Move> moves = new ArrayList<>();
     private final PetesPike engine;
     private static int MAX_MOVES = 24;
-    private static HashSet<char[][]> positions;
+    private char[][] previous = null;
 
     /**
      * Static method that returns a solution instance
@@ -81,8 +81,12 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
                 if(Arrays.deepEquals(engine.getBoard(), successor.getBoard())){
                     continue;
                 }
+                if(previous != null && Arrays.deepEquals(previous, successor.getBoard())){
+                    continue;
+                }
 
                 successor.moves.add(move);
+                successor.previous = engine.getBoard();
                 successors.add(successor);
             }
     
