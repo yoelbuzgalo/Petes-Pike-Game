@@ -11,7 +11,7 @@ import backtracker.Configuration;
 public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     private final List<Move> moves = new ArrayList<>();
     private final PetesPike engine;
-    private static int MAX_MOVES = 10;
+    private static int MAX_MOVES = 7;
 
     /**
      * Static method that returns a solution instance
@@ -49,6 +49,9 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
 
     
             for(Move move: this.engine.getPossibleMoves()) {
+                if(moves.size()!= 0 && move.equals(moves.getLast())){
+                    continue;
+                }
                 PetesPikeSolver successor = new PetesPikeSolver(new PetesPike(this.engine), this.moves);
                 successor.moves.add(move);
                 successors.add(successor);
@@ -60,9 +63,9 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
 
     @Override
     public boolean isValid() {
-        if(moves.size() > MAX_MOVES){
-            return false;
-        }
+         if(moves.size() > MAX_MOVES){
+             return false;
+         }
         try{
             this.engine.makeMove(this.getMoves().getLast());
             return true;
@@ -78,9 +81,16 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     }
 
     public static void main(String[] args) throws PetesPikeException {
-        PetesPikeSolver petesPikeSolver = solve(new PetesPike("data/petes_pike_5_5_2_0.txt"));
-        if (petesPikeSolver != null){
-            System.out.println(petesPikeSolver.getMoves().toString());
+        String[] files = new String[]{"data/petes_pike_4_8_5_no_solution.txt" , "data/petes_pike_5_5_2_0.txt" , "data/petes_pike_5_5_4_0.txt" , "data/petes_pike_5_5_4_1.txt" , "data/petes_pike_5_5_5_0.txt" , "data/petes_pike_5_7_4_0.txt" , "data/petes_pike_9_9_9_0.txt"};
+        for(String filename : files){
+            System.out.println(filename);
+            PetesPikeSolver petesPikeSolver = solve(new PetesPike(filename));
+            if (petesPikeSolver != null){
+                System.out.println(petesPikeSolver.getMoves().toString());
+            }
+            else{
+                System.out.println("null");
+            }
         }
     }
 
