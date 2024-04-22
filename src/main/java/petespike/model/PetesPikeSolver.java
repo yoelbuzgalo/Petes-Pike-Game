@@ -12,7 +12,7 @@ import backtracker.Configuration;
 public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     private final List<Move> moves = new ArrayList<>();
     private final PetesPike engine;
-    private static int MAX_MOVES = 22;
+    private static int MAX_MOVES = 7;
 
     /**
      * Static method that returns a solution instance
@@ -105,7 +105,8 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     }
 
     public static void main(String[] args) throws PetesPikeException {
-        String[] files = new String[]{"data/petes_pike_4_8_5_no_solution.txt" , "data/petes_pike_5_5_2_0.txt" , "data/petes_pike_5_5_4_0.txt" , "data/petes_pike_5_5_4_1.txt" , "data/petes_pike_5_5_5_0.txt" , "data/petes_pike_5_7_4_0.txt" , "data/petes_pike_9_9_9_0.txt"};
+        // , "data/petes_pike_9_9_9_0.txt"
+        String[] files = new String[]{"data/petes_pike_4_8_5_no_solution.txt" , "data/petes_pike_5_5_2_0.txt" , "data/petes_pike_5_5_4_0.txt" , "data/petes_pike_5_5_4_1.txt" , "data/petes_pike_5_5_5_0.txt" , "data/petes_pike_5_7_4_0.txt"};
         for(String filename : files){
             System.out.println(filename);
             PetesPikeSolver petesPikeSolver = solve(new PetesPike(filename));
