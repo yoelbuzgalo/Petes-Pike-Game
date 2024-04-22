@@ -1,6 +1,7 @@
 package petespike.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +12,7 @@ import backtracker.Configuration;
 public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     private final List<Move> moves = new ArrayList<>();
     private final PetesPike engine;
-    private static int MAX_MOVES = 7;
+    private static int MAX_MOVES = 22;
 
     /**
      * Static method that returns a solution instance
@@ -35,6 +36,14 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
         }
     }
 
+    public void makeMove(Move move) throws PetesPikeException{
+        engine.makeMove(move);
+    }
+
+    public char[][] getBoard(){
+        return engine.getBoard();
+    }
+
     /**
      * Getter method that gets the moves of a current configuration
      * @return returns a list of moves
@@ -53,6 +62,15 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
                     continue;
                 }
                 PetesPikeSolver successor = new PetesPikeSolver(new PetesPike(this.engine), this.moves);
+                try{
+                successor.makeMove(move);
+                } catch(PetesPikeException e){continue;}
+                // if(engine.getBoard().equals(successor.getBoard())){
+                //     continue;
+                // }
+                if(Arrays.deepEquals(engine.getBoard(), successor.getBoard())){
+                    continue;
+                }
                 successor.moves.add(move);
                 successors.add(successor);
             }
@@ -66,13 +84,15 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
          if(moves.size() > MAX_MOVES){
              return false;
          }
-        try{
-            this.engine.makeMove(this.getMoves().getLast());
-            return true;
-        }
-        catch(PetesPikeException e){
-            return false;
-        }
+        // try{
+        //     this.engine.makeMove(this.getMoves().getLast());
+        //     return true;
+        // }
+        // catch(PetesPikeException e){
+        //     return false;
+        // }
+
+        return true;
     }
 
     @Override
