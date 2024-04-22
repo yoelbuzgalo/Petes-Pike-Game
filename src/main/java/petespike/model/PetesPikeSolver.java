@@ -11,6 +11,7 @@ import backtracker.Configuration;
 public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
     private final List<Move> moves = new ArrayList<>();
     private final PetesPike engine;
+    private static int MAX_MOVES = 10;
 
     /**
      * Static method that returns a solution instance
@@ -44,20 +45,24 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
 
     @Override
     public Collection<PetesPikeSolver> getSuccessors() {
-        // TODO: The solver works, but we need to add a preventative case for cycle, since this will work with boards that do have solutions but not for boards that don't (runs out of memory)
         List<PetesPikeSolver> successors = new ArrayList<>();
 
-        for(Move move: this.engine.getPossibleMoves()) {
-            PetesPikeSolver successor = new PetesPikeSolver(new PetesPike(this.engine), this.moves);
-            successor.moves.add(move);
-            successors.add(successor);
-        }
+    
+            for(Move move: this.engine.getPossibleMoves()) {
+                PetesPikeSolver successor = new PetesPikeSolver(new PetesPike(this.engine), this.moves);
+                successor.moves.add(move);
+                successors.add(successor);
+            }
+    
 
         return successors;
     }
 
     @Override
     public boolean isValid() {
+        if(moves.size() > MAX_MOVES){
+            return false;
+        }
         try{
             this.engine.makeMove(this.getMoves().getLast());
             return true;
