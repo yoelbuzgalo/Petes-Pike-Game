@@ -1,6 +1,7 @@
 package petespike.view;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -358,9 +359,33 @@ public class PetesPikeUI extends Application implements PetesPikeObserver {
                 this.setMessage(e.getMessage());
             }
         });
+        Button solveButton = factoryButton("Solve ", (x) -> {
+            PetesPikeSolver solution = PetesPikeSolver.solve(engine);
+
+                    if (solution != null){
+                        Thread t = new Thread(() -> {
+                            for(Move move : solution.getMoves()){
+                                Platform.runLater(() -> {
+                                    try{
+                                    engine.makeMove(move);
+                                    } catch (PetesPikeException e){}
+                                });
+
+                                try{
+                                    Thread.sleep(250);
+                                    } catch(InterruptedException e){System.out.println(e.getMessage());}
+                            }
+                        });
+
+                        t.start();
+                        
+                    } else {
+                        this.setMessage("Sorry, there is no solution available");
+                    }
+        });
         hintBox.getChildren().addAll(this.hintPieceImage, this.hintDirectionImage);
 
-        sideBox.getChildren().addAll(moveButtonsGrid, this.hintButton, hintBox);
+        sideBox.getChildren().addAll(moveButtonsGrid, this.hintButton, hintBox , solveButton);
 
         // Bottom Box
         BorderPane messagePane = new BorderPane();

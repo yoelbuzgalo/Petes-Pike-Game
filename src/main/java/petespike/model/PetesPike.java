@@ -209,6 +209,8 @@ public class PetesPike {
         throw new PetesPikeException("There are no possible moves!");
     }
 
+    
+
     /**
      * This function checks whether a move is valid or not
      * @param move
