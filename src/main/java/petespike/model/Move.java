@@ -21,4 +21,15 @@ public class Move {
     public String toString() {
         return this.position + " " + this.direction;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Move){
+            Move other = (Move)obj;
+
+            return position.equals(other.getPosition()) && direction.equals(other.getDirection());
+        }
+
+        return false;
+    }
 }

@@ -61,6 +61,9 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
                 if(moves.size()!= 0 && move.equals(moves.getLast())){
                     continue;
                 }
+                if(moves.size()> 6 && move.equals(moves.get(moves.size()- 3)) && move.equals(moves.get(moves.size()- 5))){
+                    continue;
+                }
                 PetesPikeSolver successor = new PetesPikeSolver(new PetesPike(this.engine), this.moves);
                 try{
                 successor.makeMove(move);
@@ -71,6 +74,7 @@ public class PetesPikeSolver implements Configuration<PetesPikeSolver>{
                 if(Arrays.deepEquals(engine.getBoard(), successor.getBoard())){
                     continue;
                 }
+
                 successor.moves.add(move);
                 successors.add(successor);
             }
